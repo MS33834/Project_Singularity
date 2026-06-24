@@ -2,6 +2,15 @@
 
 > AIGC 全流程原创科幻微短剧工业化生产流程验证项目
 
+## 仓库地址
+
+| 平台 | 地址 |
+|------|------|
+| GitHub | https://github.com/MS33834/Project_Singularity |
+| GitCode | https://gitcode.com/badhope/Project_Singularity |
+
+> 每完成一个阶段，使用 `bash 08_Automation/sync_repos.sh "提交信息"` 同步推送至双仓库。
+
 ## 项目信息
 
 - **项目代号**：Project Singularity
