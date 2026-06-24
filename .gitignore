@@ -1,0 +1,98 @@
+# ===========================
+# Project Singularity .gitignore
+# ===========================
+
+# --- 视频文件（体积过大，走网盘管理）---
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.flv
+*.wmv
+*.m4v
+*.mpg
+*.mpeg
+*.3gp
+
+# --- 模型文件（体积过大，走网盘管理）---
+*.safetensors
+*.ckpt
+*.pt
+*.pth
+*.bin
+*.gguf
+*.onnx
+
+# --- 大型工程文件 ---
+*.drp
+*.drt
+*.aep
+*.aepx
+*.prproj
+*.fcpxml
+
+# --- 临时与缓存文件 ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# --- ComfyUI 输出缓存 ---
+output/
+temp/
+*.tmp
+
+# --- 系统文件 ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# --- IDE ---
+.vscode/
+.idea/
+*.code-workspace
+
+# --- 环境变量与密钥 ---
+.env
+.env.local
+*.key
+*.pem
+secrets.json
+credentials.json
+
+# --- 虚拟环境 ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- 日志 ---
+*.log
+logs/
+
+# --- 大型音频文件（保留小型 wav/mp3，排除大型）---
+# 注：配音和音效 wav/mp3 通过 LFS 管理，此处不排除
+# 如需排除大型音频，取消注释以下行：
+# *.flac
+# *.aiff
+
+# --- Topaz / AE 渲染缓存 ---
+*.tif
+*.tiff
+*.exr
+*.dpx
+
+# --- 但保留项目中的小型参考图和缩略图 ---
+!01_Assets/Characters/**/*.png
+!01_Assets/Scenes/**/*.png
+!01_Assets/Audio/**/*.wav
+!01_Assets/Audio/**/*.mp3

@@ -1,0 +1,6 @@
+# Project Singularity — 自动化脚本依赖
+# 安装: pip install -r requirements.txt
+
+requests>=2.31.0
+elevenlabs>=1.0.0
+python-dotenv>=1.0.0
