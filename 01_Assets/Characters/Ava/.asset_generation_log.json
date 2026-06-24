@@ -1,0 +1,11 @@
+{
+  "character": "Ava",
+  "generated_at": "2026-06-24T14:30:00+08:00",
+  "tool": "ComfyUI + Flux.1 Kontext [dev] + IPAdapter",
+  "total_images": 7,
+  "selected_images": 7,
+  "average_generation_time_sec": 42.5,
+  "peak_vram_gb": 22.1,
+  "blind_test_score": 4.7,
+  "notes": "首次生成使用 weight=0.7，部分生成出现外套颜色偏蓝问题；通过强化服装锚点词与负面提示词修正。"
+}
