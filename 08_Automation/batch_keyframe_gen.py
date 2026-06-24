@@ -17,18 +17,20 @@ Project Singularity
 import os
 import json
 import time
+import copy
 import requests
 from pathlib import Path
 
 # ==================== 配置区 ====================
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 COMFYUI_URL = os.getenv("COMFYUI_URL", "http://127.0.0.1:8188")
 
 # 工作流 API 格式 JSON 路径（需在 ComfyUI 中保存为 API 格式）
-WORKFLOW_API_JSON = "../03_Workflows/api/Flux_Character_Consistency_api.json"
+WORKFLOW_API_JSON = PROJECT_ROOT / "03_Workflows" / "api" / "Flux_Character_Consistency_api.json"
 
 # 输出目录
-OUTPUT_DIR = "../01_Assets/Scenes"
+OUTPUT_DIR = PROJECT_ROOT / "01_Assets" / "Scenes"
 
 # 艾娃角色锚点
 AVA_ANCHOR = (
@@ -235,7 +237,7 @@ KEYFRAMES = [
 
 def load_workflow_template() -> dict:
     """加载工作流 API 格式 JSON 模板。"""
-    if not os.path.exists(WORKFLOW_API_JSON):
+    if not WORKFLOW_API_JSON.exists():
         raise FileNotFoundError(
             f"工作流 API JSON 未找到: {WORKFLOW_API_JSON}\n"
             "请在 ComfyUI 中加载工作流后，通过 Save (API Format) 保存。"
@@ -318,7 +320,7 @@ def download_result(prompt_id: str, output_dir: str, filename: str) -> None:
                 img_url = f"{COMFYUI_URL}/view?filename={img['filename']}&subfolder={img.get('subfolder', '')}&type={img.get('type', 'output')}"
                 img_response = requests.get(img_url, timeout=60)
                 img_response.raise_for_status()
-                output_path = os.path.join(output_dir, filename)
+                output_path = Path(output_dir) / filename
                 with open(output_path, "wb") as f:
                     f.write(img_response.content)
                 print(f"  [Downloaded] {output_path}")
@@ -366,7 +368,6 @@ def main():
 
         try:
             # 深拷贝工作流模板
-            import copy
             workflow = copy.deepcopy(workflow_template)
 
             prompt_id = submit_prompt(workflow, kf["prompt"], NEGATIVE_PROMPT, seed)
@@ -376,7 +377,7 @@ def main():
             print(f"  [Completed]")
 
             filename = f"PS_{kf['id']}_v01.png"
-            download_result(prompt_id, OUTPUT_DIR, filename)
+            download_result(prompt_id, str(OUTPUT_DIR), filename)
 
             success_count += 1
         except Exception as e:

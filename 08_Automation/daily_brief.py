@@ -166,7 +166,7 @@ def main():
     brief.append("## 三、资产统计\n")
     brief.append("| 资产类型 | 当前数量 | 目标 | 状态 |")
     brief.append("|----------|----------|------|------|")
-    brief.append(f"| 场景关键帧 | {assets['keyframes']} | 29 | {'✅' if assets['keyframes'] >= 29 else '⏳'} |")
+    brief.append(f"| 场景关键帧 | {assets['keyframes']} | 24 | {'✅' if assets['keyframes'] >= 24 else '⏳'} |")
     brief.append(f"| 原始视频 | {assets['videos']} | 24 | {'✅' if assets['videos'] >= 24 else '⏳'} |")
     brief.append(f"| 音频素材 | {assets['audio']} | 15+ | {'✅' if assets['audio'] >= 15 else '⏳'} |")
     brief.append(f"| 最终成片 | {assets['final']} | 1 | {'✅' if assets['final'] >= 1 else '⏳'} |")
@@ -204,7 +204,7 @@ def main():
 
     # 站会模板
     brief.append("## 七、站会发言模板\n")
-    brief.append("``")
+    brief.append("```")
     brief.append("昨日完成:")
     brief.append("  - [填写完成的任务]")
     brief.append("")

@@ -1,6 +1,15 @@
 # Project Singularity — 自动化脚本依赖
 # 安装: pip install -r requirements.txt
+#
+# 说明：
+# - torch 建议通过 deploy_comfyui.sh 或 PyTorch 官网按 CUDA 版本安装，不在此固定版本
+# - opencv-python / Pillow / numpy 用于视频质量检测与帧分析
+# - python-dotenv 用于加载 .env 文件中的 API 密钥
 
 requests>=2.31.0
 elevenlabs>=1.0.0
 python-dotenv>=1.0.0
+Pillow>=10.0.0
+opencv-python>=4.8.0
+numpy>=1.24.0
+# torch>=2.1.0  # 请按 CUDA 版本单独安装：https://pytorch.org

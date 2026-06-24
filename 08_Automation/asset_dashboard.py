@@ -259,7 +259,7 @@ def main():
     report.append("|----------|----------|----------|------|")
 
     scene_keyframes = dir_stats.get("场景关键帧", {}).get("categories", {}).get("图片", 0)
-    report.append(f"| 场景关键帧 | 29 | {scene_keyframes} | {'✅' if scene_keyframes >= 29 else '⏳ 待生成'} |")
+    report.append(f"| 场景关键帧 | 24 | {scene_keyframes} | {'✅' if scene_keyframes >= 24 else '⏳ 待生成'} |")
 
     rough_videos = dir_stats.get("粗剪版本", {}).get("categories", {}).get("视频", 0)
     report.append(f"| 原始视频片段 | 24 | {rough_videos} | {'✅' if rough_videos >= 24 else '⏳ 待生成'} |")

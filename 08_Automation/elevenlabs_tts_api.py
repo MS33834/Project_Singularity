@@ -11,15 +11,18 @@ Project Singularity — 用于生成艾娃与奇点核心配音
 """
 
 import os
+import sys
 from pathlib import Path
 from elevenlabs import ElevenLabs, VoiceSettings
 
 # ==================== 配置区 ====================
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
 API_KEY = os.getenv("ELEVENLABS_API_KEY", "your_api_key_here")
 
-# 输出目录
-OUTPUT_DIR = "../01_Assets/Audio/Voices"
+# 输出目录（统一到 Audio/Dialogue/）
+OUTPUT_DIR = PROJECT_ROOT / "01_Assets" / "Audio" / "Dialogue"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # 角色语音配置
@@ -84,9 +87,20 @@ def generate_speech(client: ElevenLabs, role: str, text: str, output_path: str) 
 def main():
     client = ElevenLabs(api_key=API_KEY)
 
+    # 支持通过环境变量 TTS_TEXT / TTS_ROLE / TTS_FILENAME 生成单条语音（供 render_queue.py 调用）
+    single_text = os.getenv("TTS_TEXT")
+    single_role = os.getenv("TTS_ROLE", "艾娃")
+    single_filename = os.getenv("TTS_FILENAME")
+
+    if single_text:
+        output_path = OUTPUT_DIR / (single_filename or f"{single_role}_single.wav")
+        generate_speech(client, single_role, single_text, str(output_path))
+        print(f"[Info] 单条配音生成完成: {output_path}")
+        return
+
     for line in LINES:
-        output_path = os.path.join(OUTPUT_DIR, line["filename"])
-        generate_speech(client, line["role"], line["text"], output_path)
+        output_path = OUTPUT_DIR / line["filename"]
+        generate_speech(client, line["role"], line["text"], str(output_path))
 
     print("[Info] 全部配音生成完成")
 

@@ -11,15 +11,19 @@ Project Singularity — 用于生成科幻氛围配乐
 """
 
 import os
+import sys
 import time
 import requests
+from pathlib import Path
 
 # ==================== 配置区 ====================
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 API_KEY = os.getenv("SUNO_API_KEY", "your_api_key_here")
 BASE_URL = os.getenv("SUNO_BASE_URL", "https://api.sunoaiapi.com")
 
-OUTPUT_DIR = "../01_Assets/Audio/Music"
+OUTPUT_DIR = PROJECT_ROOT / "01_Assets" / "Audio" / "Music"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # 配乐需求列表
@@ -114,6 +118,21 @@ def download_audio(audio_url: str, output_path: str) -> None:
 
 
 def main():
+    # 支持通过环境变量 MUSIC_PROMPT / MUSIC_TITLE / MUSIC_TAGS 生成单首配乐（供 render_queue.py 调用）
+    single_prompt = os.getenv("MUSIC_PROMPT")
+    if single_prompt:
+        title = os.getenv("MUSIC_TITLE", "Custom_Track")
+        tags = os.getenv("MUSIC_TAGS", "cinematic, sci-fi")
+        print(f"\n[Info] 开始生成: {title}")
+        task_id = submit_generation(title, tags, single_prompt, 120)
+        audio_urls = poll_task(task_id)
+        for idx, url in enumerate(audio_urls):
+            ext = ".mp3" if ".mp3" in url else ".wav"
+            output_path = OUTPUT_DIR / f"{title}_v{idx+1}{ext}"
+            download_audio(url, str(output_path))
+        print("\n[Info] 单首配乐生成完成")
+        return
+
     for track in TRACKS:
         print(f"\n[Info] 开始生成: {track['title']}")
         task_id = submit_generation(
@@ -123,10 +142,8 @@ def main():
 
         for idx, url in enumerate(audio_urls):
             ext = ".mp3" if ".mp3" in url else ".wav"
-            output_path = os.path.join(
-                OUTPUT_DIR, f"{track['title']}_v{idx+1}{ext}"
-            )
-            download_audio(url, output_path)
+            output_path = OUTPUT_DIR / f"{track['title']}_v{idx+1}{ext}"
+            download_audio(url, str(output_path))
 
     print("\n[Info] 全部配乐生成完成")
 

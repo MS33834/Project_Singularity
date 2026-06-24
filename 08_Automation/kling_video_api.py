@@ -11,12 +11,15 @@ Project Singularity — 用于生成复杂镜头/首尾帧约束视频
 """
 
 import os
+import sys
 import time
 import base64
 import requests
 from pathlib import Path
 
 # ==================== 配置区 ====================
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 # API 配置（请替换为实际值）
 API_KEY = os.getenv("KLING_API_KEY", "your_api_key_here")
@@ -25,11 +28,12 @@ BASE_URL = os.getenv("KLING_BASE_URL", "https://api.piapi.ai")
 # Runware: https://api.runware.ai/v1
 # 快手可灵官方: https://api.klingai.com
 
-# 生成参数
-PROMPT = (
+# 生成参数（可通过环境变量 KLING_PROMPT 覆盖，供 render_queue.py 调用）
+PROMPT = os.getenv(
+    "KLING_PROMPT",
     "A woman in dark gray windbreaker walks cautiously through a ruined futuristic "
     "corridor, amber eyes scanning the environment, subtle head movement, "
-    "dust particles floating in cinematic sci-fi lighting, teal and orange color grade, 24fps"
+    "dust particles floating in cinematic sci-fi lighting, teal and orange color grade, 24fps",
 )
 NEGATIVE_PROMPT = "bad anatomy, deformed face, extra limbs, blurry, low quality, inconsistent character"
 DURATION = 5  # 秒
@@ -37,10 +41,17 @@ ASPECT_RATIO = "16:9"
 MODE = "pro"
 VERSION = "2.5-turbo"
 
-# 输入图片路径
-START_IMAGE_PATH = "../01_Assets/Scenes/S01_04_start.png"
-END_IMAGE_PATH = "../01_Assets/Scenes/S01_04_end.png"  # 可选，首尾帧时提供
-OUTPUT_DIR = "../05_Output/Rough_Cuts"
+# 输入图片路径（可通过环境变量覆盖）
+START_IMAGE_PATH = os.getenv(
+    "KLING_START_IMAGE",
+    str(PROJECT_ROOT / "01_Assets" / "Scenes" / "S01_04_start.png"),
+)
+END_IMAGE_PATH = os.getenv(
+    "KLING_END_IMAGE",
+    str(PROJECT_ROOT / "01_Assets" / "Scenes" / "S01_04_end.png"),
+)
+# 输出目录
+OUTPUT_DIR = PROJECT_ROOT / "05_Output" / "Rough_Cuts"
 
 # ==================== 工具函数 ====================
 
@@ -129,8 +140,8 @@ def main():
     print(f"[Info] 视频 URL: {video_url}")
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    output_path = os.path.join(OUTPUT_DIR, f"S01_04_Kling_{task_id}.mp4")
-    download_video(video_url, output_path)
+    output_path = OUTPUT_DIR / f"S01_04_Kling_{task_id}.mp4"
+    download_video(video_url, str(output_path))
 
 
 if __name__ == "__main__":

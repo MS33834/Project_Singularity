@@ -43,9 +43,9 @@ dist/
 build/
 .eggs/
 
-# --- ComfyUI 输出缓存 ---
-output/
-temp/
+# --- ComfyUI 输出缓存（仅根目录级别） ---
+/output/
+/temp/
 *.tmp
 
 # --- 系统文件 ---
@@ -91,8 +91,4 @@ logs/
 *.exr
 *.dpx
 
-# --- 但保留项目中的小型参考图和缩略图 ---
-!01_Assets/Characters/**/*.png
-!01_Assets/Scenes/**/*.png
-!01_Assets/Audio/**/*.wav
-!01_Assets/Audio/**/*.mp3
+# 注：小型参考图、缩略图、音频示例通过 .gitattributes LFS 管理，此处无需取反规则

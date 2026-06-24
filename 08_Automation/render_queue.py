@@ -248,9 +248,16 @@ def run_kling_task(task: dict) -> bool:
 def run_tts_task(task: dict) -> bool:
     """执行 ElevenLabs 配音。"""
     script = Path(__file__).resolve().parent / "elevenlabs_tts_api.py"
+    env = {**os.environ, "TTS_TEXT": task.get("prompt", "")}
+    # 从 extra 中读取角色与文件名
+    if task.get("extra", {}).get("role"):
+        env["TTS_ROLE"] = task["extra"]["role"]
+    if task.get("extra", {}).get("filename"):
+        env["TTS_FILENAME"] = task["extra"]["filename"]
     result = subprocess.run(
         [sys.executable, str(script)],
         capture_output=True, text=True, timeout=300,
+        env=env,
     )
     return result.returncode == 0
 
@@ -258,9 +265,15 @@ def run_tts_task(task: dict) -> bool:
 def run_music_task(task: dict) -> bool:
     """执行 Suno 配乐。"""
     script = Path(__file__).resolve().parent / "suno_music_api.py"
+    env = {**os.environ, "MUSIC_PROMPT": task.get("prompt", "")}
+    if task.get("extra", {}).get("title"):
+        env["MUSIC_TITLE"] = task["extra"]["title"]
+    if task.get("extra", {}).get("tags"):
+        env["MUSIC_TAGS"] = task["extra"]["tags"]
     result = subprocess.run(
         [sys.executable, str(script)],
         capture_output=True, text=True, timeout=600,
+        env=env,
     )
     return result.returncode == 0
 

@@ -119,7 +119,7 @@ AI算法    导演/编剧  剪辑调色  QA/测试
 
 ## 沟通与文档规范
 
-- 主文档库：`/workspace/Project_Singularity/`
+- 主文档库：本项目根目录
 - 协作工具：飞书/Notion（待团队确认）
 - 命名规范：见 [`04_SOP/SOP_Project_Singularity.md`](../04_SOP/SOP_Project_Singularity.md)
 - 所有里程碑交付物需经 QA 与教师签字确认

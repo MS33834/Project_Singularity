@@ -26,15 +26,16 @@ from datetime import datetime
 
 # ==================== 配置区 ====================
 
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 COMFYUI_URL = os.getenv("COMFYUI_URL", "http://127.0.0.1:8188")
 
 # 工作流 API 格式 JSON 路径
-WORKFLOW_API_JSON = "../03_Workflows/api/Wan22_Dual_Expert_Video_api.json"
+WORKFLOW_API_JSON = PROJECT_ROOT / "03_Workflows" / "api" / "Wan22_Dual_Expert_Video_api.json"
 
 # 输入输出目录
-KEYFRAME_DIR = "../01_Assets/Scenes"
-OUTPUT_DIR = "../05_Output/Rough_Cuts"
-LOG_FILE = "../06_Research/video_gen_log.csv"
+KEYFRAME_DIR = PROJECT_ROOT / "01_Assets" / "Scenes"
+OUTPUT_DIR = PROJECT_ROOT / "05_Output" / "Rough_Cuts"
+LOG_FILE = PROJECT_ROOT / "06_Research" / "video_gen_log.csv"
 
 # ==================== 镜头列表 ====================
 
@@ -94,7 +95,7 @@ KLING_SHOTS = [
 
 def load_workflow_template() -> dict:
     """加载工作流 API 格式 JSON。"""
-    if not os.path.exists(WORKFLOW_API_JSON):
+    if not WORKFLOW_API_JSON.exists():
         raise FileNotFoundError(
             f"工作流 API JSON 未找到: {WORKFLOW_API_JSON}\n"
             "请在 ComfyUI 中加载 Wan22 工作流后保存为 API 格式。"
@@ -213,10 +214,10 @@ def download_video(prompt_id: str, output_dir: str, filename: str) -> str:
                     file_url = f"{COMFYUI_URL}/view?filename={item['filename']}&subfolder={item.get('subfolder', '')}&type={item.get('type', 'output')}"
                     vid_response = requests.get(file_url, timeout=300)
                     vid_response.raise_for_status()
-                    output_path = os.path.join(output_dir, filename)
+                    output_path = Path(output_dir) / filename
                     with open(output_path, "wb") as f:
                         f.write(vid_response.content)
-                    return output_path
+                    return str(output_path)
 
     raise RuntimeError("未找到视频输出")
 
@@ -224,9 +225,10 @@ def download_video(prompt_id: str, output_dir: str, filename: str) -> str:
 def log_generation(log_file: str, shot_id: str, tool: str, prompt: str,
                    seed: int, status: str, output_file: str, duration_sec: float, note: str):
     """记录生成日志到 CSV。"""
-    file_exists = os.path.isfile(log_file)
-    os.makedirs(os.path.dirname(log_file), exist_ok=True)
-    with open(log_file, "a", newline="", encoding="utf-8") as f:
+    log_path = Path(log_file)
+    file_exists = log_path.is_file()
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(log_path, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if not file_exists:
             writer.writerow(["timestamp", "shot_id", "tool", "prompt", "seed",
@@ -271,10 +273,10 @@ def main():
     for i, shot in enumerate(WAN_SHOTS):
         print(f"\n[I2V {i+1}/{len(WAN_SHOTS)}] {shot['id']}")
 
-        keyframe_path = os.path.join(KEYFRAME_DIR, shot["keyframe"])
-        if not os.path.exists(keyframe_path):
+        keyframe_path = KEYFRAME_DIR / shot["keyframe"]
+        if not keyframe_path.exists():
             print(f"  [SKIP] 关键帧不存在: {keyframe_path}")
-            log_generation(LOG_FILE, shot["id"], "Wan2.2_I2V", shot["prompt"],
+            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_I2V", shot["prompt"],
                            0, "skipped", "", 0, "关键帧不存在")
             continue
 
@@ -284,7 +286,7 @@ def main():
 
         try:
             workflow = copy.deepcopy(workflow_template)
-            image_name = upload_image(keyframe_path)
+            image_name = upload_image(str(keyframe_path))
             print(f"  [Uploaded] {image_name}")
 
             prompt_id = submit_i2v_prompt(workflow, image_name, shot["prompt"], seed, frames)
@@ -294,17 +296,17 @@ def main():
             print(f"  [Completed]")
 
             filename = f"PS_{shot['id']}_Wan_v01.mp4"
-            output_path = download_video(prompt_id, OUTPUT_DIR, filename)
+            output_path = download_video(prompt_id, str(OUTPUT_DIR), filename)
 
             elapsed = time.time() - start_time
-            log_generation(LOG_FILE, shot["id"], "Wan2.2_I2V", shot["prompt"],
+            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_I2V", shot["prompt"],
                            seed, "success", filename, elapsed, "")
             success_count += 1
 
         except Exception as e:
             elapsed = time.time() - start_time
             print(f"  [FAILED] {e}")
-            log_generation(LOG_FILE, shot["id"], "Wan2.2_I2V", shot["prompt"],
+            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_I2V", shot["prompt"],
                            seed, "failed", "", elapsed, str(e))
             fail_count += 1
 
@@ -325,17 +327,17 @@ def main():
             print(f"  [Completed]")
 
             filename = f"PS_{shot['id']}_WanT2V_v01.mp4"
-            output_path = download_video(prompt_id, OUTPUT_DIR, filename)
+            output_path = download_video(prompt_id, str(OUTPUT_DIR), filename)
 
             elapsed = time.time() - start_time
-            log_generation(LOG_FILE, shot["id"], "Wan2.2_T2V", shot["prompt"],
+            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_T2V", shot["prompt"],
                            seed, "success", filename, elapsed, "")
             success_count += 1
 
         except Exception as e:
             elapsed = time.time() - start_time
             print(f"  [FAILED] {e}")
-            log_generation(LOG_FILE, shot["id"], "Wan2.2_T2V", shot["prompt"],
+            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_T2V", shot["prompt"],
                            seed, "failed", "", elapsed, str(e))
             fail_count += 1
 

@@ -5,31 +5,45 @@ ComfyUI 性能基准测试脚本
 Project Singularity — 测试 Flux / Wan2.2 在本机的生成速度与显存占用
 
 用法:
-    cd ComfyUI
+    cd ~/ComfyUI
     source venv/bin/activate
-    python /workspace/Project_Singularity/08_Automation/benchmark.py
+    python <项目根目录>/08_Automation/benchmark.py
+
+    或从任意目录运行（推荐）:
+    python 08_Automation/benchmark.py
 
 输出:
     06_Research/benchmark_results.md
 """
 
 import os
+import sys
 import time
 import json
-import torch
 from datetime import datetime
 from pathlib import Path
 
 # ==================== 配置区 ====================
 
-OUTPUT_FILE = "../06_Research/benchmark_results.md"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+OUTPUT_FILE = PROJECT_ROOT / "06_Research" / "benchmark_results.md"
 ITERATIONS = 3  # 每项测试重复次数
+
+
+def safe_input(prompt: str) -> str:
+    """容错的 input()，在非交互/CI 环境返回空字符串。"""
+    try:
+        return input(prompt).strip()
+    except (EOFError, OSError):
+        print("  [非交互环境，使用默认值 N/A]")
+        return ""
 
 # ==================== 工具函数 ====================
 
 
 def get_gpu_info() -> dict:
     """获取 GPU 信息。"""
+    import torch  # 延迟导入，避免无 GPU 环境下 import 失败
     info = {
         "gpu_name": torch.cuda.get_device_name(0),
         "total_vram_gb": torch.cuda.get_device_properties(0).total_mem / 1024**3,
@@ -41,6 +55,7 @@ def get_gpu_info() -> dict:
 
 def get_vram_usage() -> dict:
     """获取当前显存使用。"""
+    import torch
     allocated = torch.cuda.memory_allocated(0) / 1024**3
     reserved = torch.cuda.memory_reserved(0) / 1024**3
     return {"allocated_gb": round(allocated, 2), "reserved_gb": round(reserved, 2)}
@@ -72,9 +87,9 @@ def benchmark_flux_image(gpu_info: dict) -> dict:
     print("  - 生成 4 张 batch 的耗时")
 
     # 手动填写区
-    model_load_vram = input("  模型加载后显存占用 (GB): ").strip() or "N/A"
-    single_time = input("  单张生成耗时 (秒): ").strip() or "N/A"
-    batch_time = input("  4 张 batch 耗时 (秒): ").strip() or "N/A"
+    model_load_vram = safe_input("  模型加载后显存占用 (GB): ") or "N/A"
+    single_time = safe_input("  单张生成耗时 (秒): ") or "N/A"
+    batch_time = safe_input("  4 张 batch 耗时 (秒): ") or "N/A"
 
     return {
         "name": "Flux.1 Kontext FP8 (1024x1024, 24 steps)",
@@ -91,9 +106,9 @@ def benchmark_wan_video(gpu_info: dict) -> dict:
     print("  注意: 此为模拟测试，实际需在 ComfyUI 中运行。")
     print("  请手动记录以下指标:")
 
-    model_load_vram = input("  模型加载后显存占用 (GB): ").strip() or "N/A"
-    gen_480p_time = input("  480P 5秒视频生成耗时 (秒): ").strip() or "N/A"
-    gen_720p_time = input("  720P 5秒视频生成耗时 (秒): ").strip() or "N/A"
+    model_load_vram = safe_input("  模型加载后显存占用 (GB): ") or "N/A"
+    gen_480p_time = safe_input("  480P 5秒视频生成耗时 (秒): ") or "N/A"
+    gen_720p_time = safe_input("  720P 5秒视频生成耗时 (秒): ") or "N/A"
 
     return {
         "name": "Wan2.2 I2V 14B FP8 (5s, 24fps)",
@@ -107,7 +122,7 @@ def benchmark_wan_video(gpu_info: dict) -> dict:
 def benchmark_kling_api() -> dict:
     """记录可灵 API 响应时间（手动）。"""
     print("\n[Benchmark] 可灵 2.5 Turbo API...")
-    api_time = input("  API 从提交到返回视频的平均耗时 (秒): ").strip() or "N/A"
+    api_time = safe_input("  API 从提交到返回视频的平均耗时 (秒): ") or "N/A"
 
     return {
         "name": "可灵 2.5 Turbo API (5s 视频)",
@@ -125,6 +140,13 @@ def main():
     print("=" * 50)
     print("  Project Singularity — 性能基准测试")
     print("=" * 50)
+
+    try:
+        import torch
+    except ImportError:
+        print("[ERROR] PyTorch 未安装，无法运行基准测试。")
+        print("        请按 CUDA 版本安装: https://pytorch.org")
+        return
 
     if not torch.cuda.is_available():
         print("[ERROR] CUDA 不可用，无法运行基准测试。")
