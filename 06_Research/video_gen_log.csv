@@ -1,0 +1,27 @@
+timestamp,shot_id,tool,prompt,seed,status,output_file,duration_sec,note
+2026-06-25T09:00:00+08:00,S01_01,Wan2.2_T2V,Vast ruined futuristic city at dawn epic aerial descent,3001,success,PS_S01_01_WanT2V_v01.mp4,245.3,废墟大全景T2V
+2026-06-25T09:08:00+08:00,S01_02,Wan2.2_I2V,Ava walking cautiously through ruined city,2001,success,PS_S01_02_Wan_v01.mp4,312.7,
+2026-06-25T09:15:00+08:00,S01_03,Wan2.2_I2V,Close-up Ava eyes pupils contracting,2002,success,PS_S01_03_Wan_v01.mp4,298.4,
+2026-06-25T09:22:00+08:00,S01_04,Kling2.5,Ava walking from ruins to crashed spaceship,5001,success,PS_S01_04_Kling_v01.mp4,180.5,可灵首尾帧
+2026-06-25T09:28:00+08:00,S02_01,Wan2.2_I2V,Ava standing before crashed spaceship looking up,2003,success,PS_S02_01_Wan_v01.mp4,305.2,
+2026-06-25T09:36:00+08:00,S02_02,Wan2.2_I2V,Neck neural interface orange light pulsing,2004,success,PS_S02_02_Wan_v01.mp4,289.6,
+2026-06-25T09:42:00+08:00,S02_03,Wan2.2_I2V,Ava hand touching spaceship hull,2005,success,PS_S02_03_Wan_v01.mp4,301.8,
+2026-06-25T09:49:00+08:00,S02_04,Wan2.2_I2V,Spaceship panel illuminating orange glow,2006,success,PS_S02_04_Wan_v01.mp4,295.4,
+2026-06-25T09:56:00+08:00,S02_05,Kling2.5,Ava entering spaceship through open hatch,5002,success,PS_S02_05_Kling_v01.mp4,175.3,可灵首尾帧
+2026-06-25T10:04:00+08:00,S03_01,Wan2.2_I2V,Push through spaceship corridor toward core,2007,success,PS_S03_01_Wan_v01.mp4,318.5,
+2026-06-25T10:12:00+08:00,S03_02,Wan2.2_I2V,Ava walking down corridor interface glowing,2008,success,PS_S03_02_Wan_v01.mp4,307.1,
+2026-06-25T10:19:00+08:00,S03_03,Wan2.2_I2V,Right hand trembling then clenching fist,2009,success,PS_S03_03_Wan_v01.mp4,291.3,
+2026-06-25T10:25:00+08:00,S03_04,Kling2.5,Ava approaching glowing core data streams,5003,failed,,0,首帧与输入偏差过大
+2026-06-25T10:30:00+08:00,S03_04,Kling2.5,Ava approaching glowing core data streams,5004,success,PS_S03_04_Kling_v02.mp4,182.7,降低denoise后重试成功
+2026-06-25T10:38:00+08:00,S03_05,Wan2.2_I2V,Ava shocked expression looking up,2010,success,PS_S03_05_Wan_v01.mp4,299.8,
+2026-06-25T10:45:00+08:00,S03_06,Wan2.2_I2V,Ava face illuminated by intensifying core light,2011,success,PS_S03_06_Wan_v01.mp4,303.4,
+2026-06-25T10:52:00+08:00,S04_01,Wan2.2_I2V,Surreal memory fragments flashing montage,2012,success,PS_S04_01_Wan_v01.mp4,296.2,
+2026-06-25T10:59:00+08:00,S04_02,Wan2.2_I2V,Ava eyes closed tear rolling down,2013,success,PS_S04_02_Wan_v01.mp4,288.7,
+2026-06-25T11:05:00+08:00,S04_03,Kling2.5,Ava kneeling before core light wrapping around,5005,success,PS_S04_03_Kling_v01.mp4,178.9,可灵首尾帧
+2026-06-25T11:12:00+08:00,S05_01,Wan2.2_I2V,Data streams converging into giant star map,2014,success,PS_S05_01_Wan_v01.mp4,325.6,
+2026-06-25T11:20:00+08:00,S05_02,Wan2.2_I2V,Ava standing up hand hovering above core,2015,success,PS_S05_02_Wan_v01.mp4,301.2,
+2026-06-25T11:27:00+08:00,S05_03,Wan2.2_I2V,Ava sad smile hand on core light rippling,2016,success,PS_S05_03_Wan_v01.mp4,308.9,
+2026-06-25T11:35:00+08:00,S05_04,Kling2.5,Core light shifting orange to blue-white spreading,5006,failed,,0,出现手指融合
+2026-06-25T11:42:00+08:00,S05_04,Kling2.5,Core light shifting orange to blue-white spreading,5007,success,PS_S05_04_Kling_v02.mp4,185.4,替换手部遮挡角度
+2026-06-25T11:49:00+08:00,S05_05,Wan2.2_I2V,Ava walking out of spaceship sunlight,2017,success,PS_S05_05_Wan_v01.mp4,297.5,
+2026-06-25T11:56:00+08:00,S05_06,Wan2.2_T2V,Aerial view rising over ruined city,3002,success,PS_S05_06_WanT2V_v01.mp4,252.1,
