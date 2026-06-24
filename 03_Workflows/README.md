@@ -1,40 +1,41 @@
-# Project Singularity — ComfyUI 工作流说明
+# ComfyUI 工作流目录
 
-本目录存放《奇点回响》项目调试完成的 ComfyUI 工作流 JSON 文件。
+> 本目录存放 AIGC 视频生产所需的核心 ComfyUI 工作流。  
+> 以 Project Singularity /《奇点回响》为示例，实际项目请按需修改提示词、参考图与模型路径。
 
-## 文件清单
+---
 
-| 文件 | 用途 | 状态 |
+## 文件说明
+
+| 文件 | 类型 | 用途 |
 |------|------|------|
-| `Flux_Character_Consistency.json` | Flux.1 Kontext + IPAdapter 角色一致性出图 | 待 ComfyUI 中搭建后替换为实际 JSON |
-| `Wan22_Dual_Expert_Video.json` | Wan2.2 I2V 14B High/Low Noise 双专家视频生成 | 待 ComfyUI 中搭建后替换为实际 JSON |
+| `Flux_Character_Consistency.json` | 界面版 | Flux.1 Kontext + IPAdapter 角色一致性出图 |
+| `Wan22_Dual_Expert_Video.json` | 界面版 | Wan2.2 I2V 14B 双专家视频生成 |
+| `api/Flux_Character_Consistency_api.json` | API 版 | 角色一致性工作流，供脚本批量调用 |
+| `api/Wan22_Dual_Expert_Video_api.json` | API 版 | 视频生成工作流，供脚本批量调用 |
+| `ComfyUI节点连接说明.md` | 文档 | 节点连接与参数说明 |
+| `节点依赖.md` | 文档 | 所需自定义节点与模型清单 |
 
-## 如何生成最终工作流 JSON
+---
 
-1. 在 ComfyUI 中按 `04_SOP/SOP_Project_Singularity.md` 搭建节点。
-2. 点击 ComfyUI 右上角 **Save** 按钮，保存为 JSON。
-3. 将保存的 JSON 覆盖本目录下的同名文件。
-4. 在 `节点依赖.md` 中记录所用自定义节点与版本。
+## 打包发布
 
-## 推荐节点依赖
+完成最终调试后，使用打包脚本生成可分发的工作流 ZIP：
 
-### Flux_Character_Consistency
+```bash
+bash 08_Automation/package_workflows.sh 1.0
+```
 
-- `ComfyUI` 最新版
-- `ComfyUI-Manager`
-- `ComfyUI-IPAdapter-Plus`
-- `ComfyUI_PuLID_Flux`（可选）
-- `FLUX.1-Kontext-dev` 模型权重
+输出位置：`05_Output/Final/workflows/Project_Singularity_Workflows_v1.0.zip`
 
-### Wan22_Dual_Expert_Video
+---
 
-- `ComfyUI` 最新版（≥0.3.46）
-- `ComfyUI-Manager`
-- `ComfyUI-WanVideoWrapper` 或原生 Wan 节点
-- `Wan2.2-I2V-A14B` FP8 量化模型
-- `Wan2.2 VAE`
-- `umt5_xxl_fp8_e4m3fn_scaled` 文本编码器
+## 使用建议
 
-## 参数预设
+1. **角色一致性**：先运行 Flux 工作流生成多角度参考图，确认盲测通过后再进入视频生成。
+2. **视频生成**：标准镜头用 Wan2.2 High Noise Expert；特写/修复镜头用 Low Noise Expert。
+3. **API 批量**：使用 `08_Automation/batch_keyframe_gen.py` 与 `08_Automation/storyboard_to_video.py` 调用 API 版工作流。
 
-详见各 JSON 文件中的 `_meta.parameters` 字段。
+---
+
+> 本文件为模板，实际项目请按真实工作流文件调整。
