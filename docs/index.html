@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Singularity — AIGC Video Pipeline</title>
+  <meta name="description" content="Project Singularity: a reusable AIGC video production pipeline from script to 4K master.">
+  <link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a href="#" class="logo">Project Singularity</a>
+      <nav>
+        <a href="#about" data-i18n="nav_about">About</a>
+        <a href="#pipeline" data-i18n="nav_pipeline">Pipeline</a>
+        <a href="#repos" data-i18n="nav_repos">Repos</a>
+        <a href="#start" data-i18n="nav_start">Start</a>
+        <button id="lang-toggle" class="lang-toggle" aria-label="Switch language">中文</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow" data-i18n="hero_eyebrow">AIGC video production pipeline</p>
+        <h1 data-i18n="hero_title">From script to 4K master, repeatable.</h1>
+        <p class="lead" data-i18n="hero_lead">
+          Project Singularity is a workflow template for making 3–5 minute AIGC short films.
+          It includes scripts, storyboards, ComfyUI workflows, automation scripts, and a worked example:
+          the sci-fi micro-short <em>Echo of the Singularity</em>.
+        </p>
+        <div class="cta-group">
+          <a href="https://github.com/MS33834/Project_Singularity" class="btn btn-primary" target="_blank" rel="noopener" data-i18n="hero_cta_primary">View on GitHub</a>
+          <a href="https://gitcode.com/badhope/Project_Singularity" class="btn btn-secondary" target="_blank" rel="noopener" data-i18n="hero_cta_secondary">View on GitCode</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="container">
+        <h2 data-i18n="about_title">What this project is</h2>
+        <p data-i18n="about_p1">
+          Making an AIGC video is easy for a five-second clip. At three to five minutes, things fall apart:
+          characters look different shot to shot, prompts drift, parameters get lost, and teams step on each other’s work.
+        </p>
+        <p data-i18n="about_p2">
+          This repository bundles the documents, scripts, and workflows we use to keep production sane.
+          It is not a magic button. It is a structured way to plan, generate, check, and deliver.
+        </p>
+
+        <div class="feature-grid">
+          <div class="feature">
+            <h3 data-i18n="feature_1_title">Locked characters</h3>
+            <p data-i18n="feature_1_text">Flux.1 Kontext + IPAdapter keep the lead character consistent across all 24 shots.</p>
+          </div>
+          <div class="feature">
+            <h3 data-i18n="feature_2_title">Hybrid generation</h3>
+            <p data-i18n="feature_2_text">Standard shots run locally on Wan2.2 I2V; complex moves use Kling 2.5 Turbo with start/end frames.</p>
+          </div>
+          <div class="feature">
+            <h3 data-i18n="feature_3_title">Tracked production</h3>
+            <p data-i18n="feature_3_text">Shot tracker, render queue, daily briefs, and QA checklists keep everyone aligned.</p>
+          </div>
+          <div class="feature">
+            <h3 data-i18n="feature_4_title">Full post pipeline</h3>
+            <p data-i18n="feature_4_text">DaVinci edit and color, ElevenLabs dialogue, Suno music, Topaz 4K upscale.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pipeline" class="section section-alt">
+      <div class="container">
+        <h2 data-i18n="pipeline_title">Pipeline overview</h2>
+        <div class="pipeline">
+          <div class="pipeline-step">
+            <span class="step-number">01</span>
+            <h3 data-i18n="step_1_title">Plan</h3>
+            <p data-i18n="step_1_text">Script, world-building, character bible, and 24-shot storyboard.</p>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-number">02</span>
+            <h3 data-i18n="step_2_title">Assets</h3>
+            <p data-i18n="step_2_text">Reference images, keyframes, and locked prompts for every shot.</p>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-number">03</span>
+            <h3 data-i18n="step_3_title">Motion</h3>
+            <p data-i18n="step_3_text">Batch video generation with seed tracking and quality checks.</p>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-number">04</span>
+            <h3 data-i18n="step_4_title">Post</h3>
+            <p data-i18n="step_4_text">Edit, sound design, music, color grade, and 4K delivery.</p>
+          </div>
+          <div class="pipeline-step">
+            <span class="step-number">05</span>
+            <h3 data-i18n="step_5_title">Release</h3>
+            <p data-i18n="step_5_text">Packaged workflows, tutorial, and release checklist.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="repos" class="section">
+      <div class="container">
+        <h2 data-i18n="repos_title">Repository mirrors</h2>
+        <p data-i18n="repos_text">The project is mirrored between GitHub and GitCode. Both stay in sync via an automation script.</p>
+        <div class="repo-cards">
+          <a href="https://github.com/MS33834/Project_Singularity" class="repo-card" target="_blank" rel="noopener">
+            <h3>GitHub</h3>
+            <p>github.com/MS33834/Project_Singularity</p>
+          </a>
+          <a href="https://gitcode.com/badhope/Project_Singularity" class="repo-card" target="_blank" rel="noopener">
+            <h3>GitCode</h3>
+            <p>gitcode.com/badhope/Project_Singularity</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="start" class="section section-alt">
+      <div class="container">
+        <h2 data-i18n="start_title">Quick start</h2>
+        <ol class="steps">
+          <li data-i18n="start_1">Clone the repository and install Python dependencies with <code>make setup</code>.</li>
+          <li data-i18n="start_2">Read <code>AIGC_Experience_Chain.md</code> to understand the full workflow.</li>
+          <li data-i18n="start_3">Explore the <code>examples/奇点回响/</code> case study for a worked production plan.</li>
+          <li data-i18n="start_4">Run <code>make check</code> to verify the project structure.</li>
+          <li data-i18n="start_5">Open the ComfyUI workflows in <code>03_Workflows/</code> and adapt them to your project.</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p data-i18n="footer">
+        Project Singularity — maintained by the team. Released under the MIT License.
+      </p>
+    </div>
+  </footer>
+
+  <script src="./assets/script.js"></script>
+</body>
+</html>

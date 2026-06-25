@@ -100,6 +100,8 @@ flowchart TB
 
 双仓库通过 [`08_Automation/sync_repos.sh`](./08_Automation/sync_repos.sh) 同步。
 
+项目介绍页（GitHub Pages）：https://ms33834.github.io/Project_Singularity/
+
 ---
 
 ## 项目信息
@@ -128,7 +130,8 @@ Project_Singularity/
 ├── 07_Team/                # 团队分工与任务分派
 ├── 08_Automation/          # 部署、生成、质检、同步脚本
 ├── 09_Release/             # 发布检查清单与展示模板
-├── examples/               # 示例输入/输出
+├── examples/               # 示例输入/输出，含《奇点回响》完整案例
+├── docs/                   # GitHub Pages 介绍页
 ├── .github/                # Issue 与 PR 模板
 ├── AIGC_Experience_Chain.md
 ├── AIGC_Experience_Chain.en.md

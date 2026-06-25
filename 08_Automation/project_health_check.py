@@ -31,6 +31,14 @@ REQUIRED_FILES = [
     "08_Automation/sync_repos.sh",
     "08_Automation/preflight_check.py",
     "08_Automation/project_health_check.py",
+    "docs/index.html",
+    "docs/assets/style.css",
+    "docs/assets/script.js",
+    "examples/奇点回响/README.md",
+    "examples/奇点回响/production_plan.md",
+    "examples/奇点回响/production_log.md",
+    "examples/奇点回响/character_bible_ava.md",
+    "examples/奇点回响/shot_tracker.md",
 ]
 
 REQUIRED_DIRS = [

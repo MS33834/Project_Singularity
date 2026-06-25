@@ -100,6 +100,8 @@ flowchart TB
 
 Dual-repo sync is handled by [`08_Automation/sync_repos.sh`](./08_Automation/sync_repos.sh).
 
+Project homepage (GitHub Pages): https://ms33834.github.io/Project_Singularity/
+
 ---
 
 ## Project Info
@@ -128,7 +130,8 @@ Project_Singularity/
 ├── 07_Team/                # Team roles and task assignments
 ├── 08_Automation/          # Deployment, generation, QA, sync scripts
 ├── 09_Release/             # Release checklists and showcase templates
-├── examples/               # Example inputs/outputs
+├── examples/               # Example inputs/outputs, including the Echo of the Singularity case study
+├── docs/                   # GitHub Pages introduction site
 ├── .github/                # Issue & PR templates, CI workflows
 ├── AIGC_Experience_Chain.md      (Chinese)
 ├── AIGC_Experience_Chain.en.md   (English)
