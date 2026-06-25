@@ -16,7 +16,9 @@
 - 新增 `Makefile`，提供 `make check/setup/docker/test/sync/clean` 等常用命令。
 - 新增 `.github/ISSUE_TEMPLATE/` 与 `.github/PULL_REQUEST_TEMPLATE.md`。
 - 新增 `08_Automation/project_health_check.py`，一键检查项目结构完整性。
-- README 新增徽章、Mermaid 架构图、`Makefile` 使用说明。
+- 新增 `examples/奇点回响/` 完整案例研究，含制作计划书、制作日志、角色圣经、镜头进度表。
+- 新增 `docs/` GitHub Pages 介绍站点，支持中英文切换，与项目视觉风格一致。
+- README 新增徽章、Mermaid 架构图、`Makefile` 使用说明与 GitHub Pages 入口。
 - README 重写，减少 AI 生成感，强调项目作为开源流程模板的定位。
 
 ### Changed
