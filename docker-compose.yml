@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  project-singularity:
+    build: .
+    container_name: project-singularity
+    volumes:
+      - .:/app
+      - ./.env:/app/.env:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    # 如需 GPU，取消下面注释并确保宿主机已安装 NVIDIA Docker Runtime
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+    command: python 08_Automation/preflight_check.py
