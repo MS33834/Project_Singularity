@@ -4,6 +4,9 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![ComfyUI](https://img.shields.io/badge/ComfyUI-Workflow-green.svg)](./03_Workflows/)
 [![Docker](https://img.shields.io/badge/Docker-Supported-2496ED.svg)](./docker-compose.yml)
+[![CI](https://img.shields.io/badge/CI-GitHub_Actions-blue.svg)](./.github/workflows/ci.yml)
+
+中文 | [English](./README.en.md)
 
 > 一套从剧本到 4K 母版的 AIGC 视频工业化流程模板。
 
@@ -128,6 +131,7 @@ Project_Singularity/
 ├── examples/               # 示例输入/输出
 ├── .github/                # Issue 与 PR 模板
 ├── AIGC_Experience_Chain.md
+├── AIGC_Experience_Chain.en.md
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
@@ -135,6 +139,7 @@ Project_Singularity/
 ├── Dockerfile
 ├── LICENSE
 ├── Makefile
+├── README.en.md
 ├── ROADMAP.md
 ├── TROUBLESHOOTING.md
 ├── docker-compose.yml

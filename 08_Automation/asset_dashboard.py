@@ -9,8 +9,8 @@ Project Singularity
 """
 
 import re
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # ==================== 配置区 ====================
 
@@ -250,7 +250,9 @@ def main():
             ready_count += 1
         report.append(f"| {name} | {'✅ 已就绪' if exists else '❌ 缺失'} |")
 
-    report.append(f"\n**关键资产就绪率**: {ready_count}/{len(key_assets)} ({ready_count/len(key_assets)*100:.0f}%)\n")
+    report.append(
+        f"\n**关键资产就绪率**: {ready_count}/{len(key_assets)} ({ready_count/len(key_assets)*100:.0f}%)\n"
+    )
 
     # 待生成资产
     report.append("## 五、待生成资产（实机执行后产生）\n")
@@ -258,16 +260,24 @@ def main():
     report.append("|----------|----------|----------|------|")
 
     scene_keyframes = dir_stats.get("场景关键帧", {}).get("categories", {}).get("图片", 0)
-    report.append(f"| 场景关键帧 | 29 | {scene_keyframes} | {'✅' if scene_keyframes >= 29 else '⏳ 待生成'} |")
+    report.append(
+        f"| 场景关键帧 | 29 | {scene_keyframes} | {'✅' if scene_keyframes >= 29 else '⏳ 待生成'} |"
+    )
 
     rough_videos = dir_stats.get("粗剪版本", {}).get("categories", {}).get("视频", 0)
-    report.append(f"| 原始视频片段 | 24 | {rough_videos} | {'✅' if rough_videos >= 24 else '⏳ 待生成'} |")
+    report.append(
+        f"| 原始视频片段 | 24 | {rough_videos} | {'✅' if rough_videos >= 24 else '⏳ 待生成'} |"
+    )
 
     audio_files = dir_stats.get("音频素材", {}).get("files", 0)
-    report.append(f"| 音频素材 | 15+ | {audio_files} | {'✅' if audio_files >= 15 else '⏳ 待生成'} |")
+    report.append(
+        f"| 音频素材 | 15+ | {audio_files} | {'✅' if audio_files >= 15 else '⏳ 待生成'} |"
+    )
 
     final_videos = dir_stats.get("最终成片", {}).get("categories", {}).get("视频", 0)
-    report.append(f"| 最终成片 | 1 | {final_videos} | {'✅' if final_videos >= 1 else '⏳ 待生成'} |")
+    report.append(
+        f"| 最终成片 | 1 | {final_videos} | {'✅' if final_videos >= 1 else '⏳ 待生成'} |"
+    )
 
     report.append("")
 

@@ -10,11 +10,12 @@ Project Singularity — 用于生成复杂镜头/首尾帧约束视频
 3. 本脚本以常见第三方 API 格式为例，使用前请确认文档。
 """
 
+import base64
 import os
 import time
-import base64
-import requests
 from pathlib import Path
+
+import requests
 
 # ==================== 配置区 ====================
 
@@ -34,7 +35,9 @@ PROMPT = os.getenv(
     "corridor, amber eyes scanning the environment, subtle head movement, "
     "dust particles floating in cinematic sci-fi lighting, teal and orange color grade, 24fps",
 )
-NEGATIVE_PROMPT = "bad anatomy, deformed face, extra limbs, blurry, low quality, inconsistent character"
+NEGATIVE_PROMPT = (
+    "bad anatomy, deformed face, extra limbs, blurry, low quality, inconsistent character"
+)
 DURATION = 5  # 秒
 ASPECT_RATIO = "16:9"
 MODE = "pro"
@@ -53,6 +56,7 @@ END_IMAGE_PATH = os.getenv(
 OUTPUT_DIR = PROJECT_ROOT / "05_Output" / "Rough_Cuts"
 
 # ==================== 工具函数 ====================
+
 
 def encode_image_to_base64(image_path: str) -> str:
     """将图片转为 base64 字符串（带 data URI 前缀）。"""

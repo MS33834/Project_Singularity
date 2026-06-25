@@ -1,23 +1,36 @@
 #!/usr/bin/env python3
-"""项目结构与健康检查脚本。"""
+"""Project health check script."""
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 REQUIRED_FILES = [
     "README.md",
+    "README.en.md",
     "LICENSE",
     "CONTRIBUTING.md",
     "CHANGELOG.md",
-    "AIGC_Experience_Chain.md",
+    "CODE_OF_CONDUCT.md",
     "ROADMAP.md",
+    "AIGC_Experience_Chain.md",
+    "AIGC_Experience_Chain.en.md",
     "COST_ANALYSIS.md",
     "TROUBLESHOOTING.md",
+    "Dockerfile",
+    "docker-compose.yml",
+    "Makefile",
+    "pyproject.toml",
+    ".editorconfig",
+    ".gitattributes",
+    ".dockerignore",
+    ".pre-commit-config.yaml",
     ".env.example",
+    ".github/workflows/ci.yml",
     "08_Automation/sync_repos.sh",
     "08_Automation/preflight_check.py",
+    "08_Automation/project_health_check.py",
 ]
 
 REQUIRED_DIRS = [
@@ -31,6 +44,7 @@ REQUIRED_DIRS = [
     "08_Automation",
     "09_Release",
     "examples",
+    ".github/ISSUE_TEMPLATE",
 ]
 
 
@@ -39,20 +53,20 @@ def check():
     for f in REQUIRED_FILES:
         path = PROJECT_ROOT / f
         if not path.exists():
-            errors.append(f"缺失文件: {f}")
+            errors.append(f"Missing file: {f}")
 
     for d in REQUIRED_DIRS:
         path = PROJECT_ROOT / d
         if not path.exists():
-            errors.append(f"缺失目录: {d}")
+            errors.append(f"Missing directory: {d}")
 
     if errors:
-        print("项目健康检查未通过:")
+        print("Project health check failed:")
         for e in errors:
             print(f"  - {e}")
         return 1
 
-    print("项目健康检查通过。")
+    print("Project health check passed.")
     return 0
 
 

@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info
+.pytest_cache
+
+# Environment
+.env
+.venv
+venv/
+
+# Models and large outputs
+*.safetensors
+*.ckpt
+*.pth
+05_Output/
+
+# IDE
+.vscode
+.idea
+*.swp

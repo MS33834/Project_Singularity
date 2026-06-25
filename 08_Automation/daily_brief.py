@@ -8,11 +8,11 @@ Project Singularity
 输出: 控制台打印 + 07_Team/daily_briefs/YYYY-MM-DD.md
 """
 
-import re
 import csv
 import json
-from pathlib import Path
+import re
 from datetime import datetime
+from pathlib import Path
 
 # ==================== 配置区 ====================
 
@@ -96,14 +96,26 @@ def count_assets() -> dict:
     # 视频
     video_dir = PROJECT_ROOT / "05_Output" / "Rough_Cuts"
     video_exts = {".mp4", ".avi", ".mov", ".mkv", ".webm"}
-    assets["videos"] = len([f for f in video_dir.rglob("*") if f.suffix.lower() in video_exts]) if video_dir.exists() else 0
+    assets["videos"] = (
+        len([f for f in video_dir.rglob("*") if f.suffix.lower() in video_exts])
+        if video_dir.exists()
+        else 0
+    )
     # 音频
     audio_dir = PROJECT_ROOT / "01_Assets" / "Audio"
     audio_exts = {".wav", ".mp3"}
-    assets["audio"] = len([f for f in audio_dir.rglob("*") if f.suffix.lower() in audio_exts]) if audio_dir.exists() else 0
+    assets["audio"] = (
+        len([f for f in audio_dir.rglob("*") if f.suffix.lower() in audio_exts])
+        if audio_dir.exists()
+        else 0
+    )
     # 最终成片
     final_dir = PROJECT_ROOT / "05_Output" / "Final"
-    assets["final"] = len([f for f in final_dir.rglob("*") if f.suffix.lower() in video_exts]) if final_dir.exists() else 0
+    assets["final"] = (
+        len([f for f in final_dir.rglob("*") if f.suffix.lower() in video_exts])
+        if final_dir.exists()
+        else 0
+    )
     return assets
 
 
@@ -165,9 +177,15 @@ def main():
     brief.append("## 三、资产统计\n")
     brief.append("| 资产类型 | 当前数量 | 目标 | 状态 |")
     brief.append("|----------|----------|------|------|")
-    brief.append(f"| 场景关键帧 | {assets['keyframes']} | 29 | {'✅' if assets['keyframes'] >= 29 else '⏳'} |")
-    brief.append(f"| 原始视频 | {assets['videos']} | 24 | {'✅' if assets['videos'] >= 24 else '⏳'} |")
-    brief.append(f"| 音频素材 | {assets['audio']} | 15+ | {'✅' if assets['audio'] >= 15 else '⏳'} |")
+    brief.append(
+        f"| 场景关键帧 | {assets['keyframes']} | 29 | {'✅' if assets['keyframes'] >= 29 else '⏳'} |"
+    )
+    brief.append(
+        f"| 原始视频 | {assets['videos']} | 24 | {'✅' if assets['videos'] >= 24 else '⏳'} |"
+    )
+    brief.append(
+        f"| 音频素材 | {assets['audio']} | 15+ | {'✅' if assets['audio'] >= 15 else '⏳'} |"
+    )
     brief.append(f"| 最终成片 | {assets['final']} | 1 | {'✅' if assets['final'] >= 1 else '⏳'} |")
     brief.append("")
 

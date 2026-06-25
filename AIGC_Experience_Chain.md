@@ -1,5 +1,7 @@
 # Project Singularity — AIGC 全流程经验链
 
+中文 | [English](./AIGC_Experience_Chain.en.md)
+
 > 本文档说明 Project Singularity 覆盖的完整 AIGC 视频生产链路，以及每个环节想解决的具体问题。
 
 ---

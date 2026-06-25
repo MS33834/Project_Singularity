@@ -14,12 +14,13 @@ Project Singularity
     - 本脚本读取提示词汇总表，逐条提交到 ComfyUI API
 """
 
-import os
-import json
-import time
 import copy
-import requests
+import json
+import os
+import time
 from pathlib import Path
+
+import requests
 
 # ==================== 配置区 ====================
 

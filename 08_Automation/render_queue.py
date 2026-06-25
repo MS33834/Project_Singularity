@@ -15,13 +15,13 @@ Project Singularity
 队列文件: 06_Research/render_queue.json
 """
 
-import os
-import sys
 import json
-import time
+import os
 import subprocess
-from pathlib import Path
+import sys
+import time
 from datetime import datetime
+from pathlib import Path
 
 # ==================== 配置区 ====================
 
@@ -244,7 +244,9 @@ def run_kling_task(task: dict) -> bool:
     }
     result = subprocess.run(
         [sys.executable, str(script)],
-        capture_output=True, text=True, timeout=600,
+        capture_output=True,
+        text=True,
+        timeout=600,
         env=env,
     )
     return result.returncode == 0
@@ -261,7 +263,9 @@ def run_tts_task(task: dict) -> bool:
         env["TTS_FILENAME"] = task["extra"]["filename"]
     result = subprocess.run(
         [sys.executable, str(script)],
-        capture_output=True, text=True, timeout=300,
+        capture_output=True,
+        text=True,
+        timeout=300,
         env=env,
     )
     return result.returncode == 0
@@ -277,7 +281,9 @@ def run_music_task(task: dict) -> bool:
         env["MUSIC_TAGS"] = task["extra"]["tags"]
     result = subprocess.run(
         [sys.executable, str(script)],
-        capture_output=True, text=True, timeout=600,
+        capture_output=True,
+        text=True,
+        timeout=600,
         env=env,
     )
     return result.returncode == 0

@@ -15,14 +15,15 @@ Project Singularity
     - 记录生成日志到 06_Research/video_gen_log.csv
 """
 
-import os
+import copy
 import csv
 import json
+import os
 import time
-import copy
-import requests
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import requests
 
 # ==================== 配置区 ====================
 
@@ -41,53 +42,133 @@ LOG_FILE = PROJECT_ROOT / "06_Research" / "video_gen_log.csv"
 
 # 标准镜头（使用 Wan2.2 I2V）
 WAN_SHOTS = [
-    {"id": "S01_02", "keyframe": "PS_S01_02_v01.png", "duration": 5,
-     "prompt": "Ava walking cautiously through ruined city, looking around, morning light, dust particles, subtle head movement, cinematic sci-fi"},
-    {"id": "S01_03", "keyframe": "PS_S01_03_v01.png", "duration": 3,
-     "prompt": "Extreme close-up of Ava's amber eyes, pupils contracting, expression shifting from confusion to alertness, breath mist, subtle movement"},
-    {"id": "S02_01", "keyframe": "PS_S02_01_v01.png", "duration": 5,
-     "prompt": "Ava standing before massive crashed spaceship, looking up slowly, neural interface beginning to glow, low angle, dust falling"},
-    {"id": "S02_02", "keyframe": "PS_S02_02_v01.png", "duration": 3,
-     "prompt": "Close-up of neck neural interface, orange light pulsing like heartbeat, subtle skin movement, glowing intensifying"},
-    {"id": "S02_03", "keyframe": "PS_S02_03_v01.png", "duration": 4,
-     "prompt": "Ava reaching hand to touch spaceship hull, fingertips grazing metal, dust falling, slow movement, handheld feel"},
-    {"id": "S02_04", "keyframe": "PS_S02_04_v01.png", "duration": 5,
-     "prompt": "Damaged spaceship panel illuminating with orange glow, light spreading across cracked metal surface, dust particles reacting"},
-    {"id": "S03_01", "keyframe": "PS_S03_01_v01.png", "duration": 5,
-     "prompt": "Slow forward push through spaceship corridor toward glowing core, broken screens flickering, data streams flowing on walls"},
-    {"id": "S03_02", "keyframe": "PS_S03_02_v01.png", "duration": 4,
-     "prompt": "Ava walking down corridor, bracelet and interface glowing brighter, tense side profile, slow steady pace"},
-    {"id": "S03_03", "keyframe": "PS_S03_03_v01.png", "duration": 3,
-     "prompt": "Close-up of right hand trembling then clenching into fist, orange glow reflecting on skin, subtle movement"},
-    {"id": "S03_05", "keyframe": "PS_S03_05_v01.png", "duration": 4,
-     "prompt": "Ava shocked expression, looking up searching, orange light on face, fear and curiosity, slight head movement"},
-    {"id": "S03_06", "keyframe": "PS_S03_06_v01.png", "duration": 5,
-     "prompt": "Ava face illuminated by intensifying orange light, slow push-in, core glowing brighter in background, eyes reflecting light"},
-    {"id": "S04_01", "keyframe": "PS_S04_01_v01.png", "duration": 4,
-     "prompt": "Surreal memory fragments flashing, childhood room, surgical light, city skyline, dreamlike superimposition, fast cuts"},
-    {"id": "S04_02", "keyframe": "PS_S04_02_v01.png", "duration": 3,
-     "prompt": "Ava eyes closed, tear rolling down cheek, neural interface flashing, orange light pulsing, subtle trembling"},
-    {"id": "S05_01", "keyframe": "PS_S05_01_v01.png", "duration": 5,
-     "prompt": "Data streams converging into giant star map, glowing points appearing, Ava small figure in center, epic slow reveal"},
-    {"id": "S05_02", "keyframe": "PS_S05_02_v01.png", "duration": 4,
-     "prompt": "Ava slowly standing up, hand hovering above core, tense expression, handheld, subtle body movement"},
-    {"id": "S05_03", "keyframe": "PS_S05_03_v01.png", "duration": 5,
-     "prompt": "Ava sad smile, hand gently placed on core, orange light rippling from contact, emotional moment"},
-    {"id": "S05_05", "keyframe": "PS_S05_05_v01.png", "duration": 5,
-     "prompt": "Ava walking out of spaceship, clouds parting, sunlight beam falling on her, peaceful expression, slow walk"},
+    {
+        "id": "S01_02",
+        "keyframe": "PS_S01_02_v01.png",
+        "duration": 5,
+        "prompt": "Ava walking cautiously through ruined city, looking around, morning light, dust particles, subtle head movement, cinematic sci-fi",
+    },
+    {
+        "id": "S01_03",
+        "keyframe": "PS_S01_03_v01.png",
+        "duration": 3,
+        "prompt": "Extreme close-up of Ava's amber eyes, pupils contracting, expression shifting from confusion to alertness, breath mist, subtle movement",
+    },
+    {
+        "id": "S02_01",
+        "keyframe": "PS_S02_01_v01.png",
+        "duration": 5,
+        "prompt": "Ava standing before massive crashed spaceship, looking up slowly, neural interface beginning to glow, low angle, dust falling",
+    },
+    {
+        "id": "S02_02",
+        "keyframe": "PS_S02_02_v01.png",
+        "duration": 3,
+        "prompt": "Close-up of neck neural interface, orange light pulsing like heartbeat, subtle skin movement, glowing intensifying",
+    },
+    {
+        "id": "S02_03",
+        "keyframe": "PS_S02_03_v01.png",
+        "duration": 4,
+        "prompt": "Ava reaching hand to touch spaceship hull, fingertips grazing metal, dust falling, slow movement, handheld feel",
+    },
+    {
+        "id": "S02_04",
+        "keyframe": "PS_S02_04_v01.png",
+        "duration": 5,
+        "prompt": "Damaged spaceship panel illuminating with orange glow, light spreading across cracked metal surface, dust particles reacting",
+    },
+    {
+        "id": "S03_01",
+        "keyframe": "PS_S03_01_v01.png",
+        "duration": 5,
+        "prompt": "Slow forward push through spaceship corridor toward glowing core, broken screens flickering, data streams flowing on walls",
+    },
+    {
+        "id": "S03_02",
+        "keyframe": "PS_S03_02_v01.png",
+        "duration": 4,
+        "prompt": "Ava walking down corridor, bracelet and interface glowing brighter, tense side profile, slow steady pace",
+    },
+    {
+        "id": "S03_03",
+        "keyframe": "PS_S03_03_v01.png",
+        "duration": 3,
+        "prompt": "Close-up of right hand trembling then clenching into fist, orange glow reflecting on skin, subtle movement",
+    },
+    {
+        "id": "S03_05",
+        "keyframe": "PS_S03_05_v01.png",
+        "duration": 4,
+        "prompt": "Ava shocked expression, looking up searching, orange light on face, fear and curiosity, slight head movement",
+    },
+    {
+        "id": "S03_06",
+        "keyframe": "PS_S03_06_v01.png",
+        "duration": 5,
+        "prompt": "Ava face illuminated by intensifying orange light, slow push-in, core glowing brighter in background, eyes reflecting light",
+    },
+    {
+        "id": "S04_01",
+        "keyframe": "PS_S04_01_v01.png",
+        "duration": 4,
+        "prompt": "Surreal memory fragments flashing, childhood room, surgical light, city skyline, dreamlike superimposition, fast cuts",
+    },
+    {
+        "id": "S04_02",
+        "keyframe": "PS_S04_02_v01.png",
+        "duration": 3,
+        "prompt": "Ava eyes closed, tear rolling down cheek, neural interface flashing, orange light pulsing, subtle trembling",
+    },
+    {
+        "id": "S05_01",
+        "keyframe": "PS_S05_01_v01.png",
+        "duration": 5,
+        "prompt": "Data streams converging into giant star map, glowing points appearing, Ava small figure in center, epic slow reveal",
+    },
+    {
+        "id": "S05_02",
+        "keyframe": "PS_S05_02_v01.png",
+        "duration": 4,
+        "prompt": "Ava slowly standing up, hand hovering above core, tense expression, handheld, subtle body movement",
+    },
+    {
+        "id": "S05_03",
+        "keyframe": "PS_S05_03_v01.png",
+        "duration": 5,
+        "prompt": "Ava sad smile, hand gently placed on core, orange light rippling from contact, emotional moment",
+    },
+    {
+        "id": "S05_05",
+        "keyframe": "PS_S05_05_v01.png",
+        "duration": 5,
+        "prompt": "Ava walking out of spaceship, clouds parting, sunlight beam falling on her, peaceful expression, slow walk",
+    },
 ]
 
 # 纯场景镜头（使用 Wan2.2 T2V，无输入图）
 T2V_SHOTS = [
-    {"id": "S01_01", "keyframe": None, "duration": 5,
-     "prompt": "Vast ruined futuristic city at dawn, collapsed bridges, crumbling skyscrapers, golden light beams through clouds, dust particles, epic aerial descent"},
-    {"id": "S05_06", "keyframe": None, "duration": 5,
-     "prompt": "Aerial view rising slowly, tiny figure walking through vast ruined city, morning light spreading, epic scale, faint electronic resonance"},
+    {
+        "id": "S01_01",
+        "keyframe": None,
+        "duration": 5,
+        "prompt": "Vast ruined futuristic city at dawn, collapsed bridges, crumbling skyscrapers, golden light beams through clouds, dust particles, epic aerial descent",
+    },
+    {
+        "id": "S05_06",
+        "keyframe": None,
+        "duration": 5,
+        "prompt": "Aerial view rising slowly, tiny figure walking through vast ruined city, morning light spreading, epic scale, faint electronic resonance",
+    },
 ]
 
 # 复杂镜头（使用可灵 API，不在此脚本处理，仅记录）
 KLING_SHOTS = [
-    "S01_04", "S02_05", "S03_04", "S04_03", "S05_04",
+    "S01_04",
+    "S02_05",
+    "S03_04",
+    "S04_03",
+    "S05_04",
 ]
 
 # ==================== 工具函数 ====================
@@ -115,7 +196,9 @@ def upload_image(image_path: str) -> str:
     return result.get("name", filename)
 
 
-def submit_i2v_prompt(workflow: dict, image_name: str, prompt_text: str, seed: int, frames: int) -> str:
+def submit_i2v_prompt(
+    workflow: dict, image_name: str, prompt_text: str, seed: int, frames: int
+) -> str:
     """提交 I2V 生成任务。"""
     # 设置 LoadImage 节点
     for node_id, node_data in workflow.items():
@@ -143,7 +226,13 @@ def submit_i2v_prompt(workflow: dict, image_name: str, prompt_text: str, seed: i
             if "length" in inputs:
                 inputs["length"] = frames
         # 仅对已知视频相关节点设置 frames，避免误改其他节点
-        if cls in ("WanImageToVideo", "WanTextToVideo", "VideoCombine", "SaveAnimatedWEBP", "SaveVideo"):
+        if cls in (
+            "WanImageToVideo",
+            "WanTextToVideo",
+            "VideoCombine",
+            "SaveAnimatedWEBP",
+            "SaveVideo",
+        ):
             if "frames" in inputs:
                 inputs["frames"] = frames
 
@@ -187,7 +276,13 @@ def submit_t2v_prompt(workflow: dict, prompt_text: str, seed: int, frames: int) 
             if "length" in inputs:
                 inputs["length"] = frames
         # 仅对已知视频相关节点设置 frames，避免误改其他节点
-        if cls in ("WanImageToVideo", "WanTextToVideo", "VideoCombine", "SaveAnimatedWEBP", "SaveVideo"):
+        if cls in (
+            "WanImageToVideo",
+            "WanTextToVideo",
+            "VideoCombine",
+            "SaveAnimatedWEBP",
+            "SaveVideo",
+        ):
             if "frames" in inputs:
                 inputs["frames"] = frames
 
@@ -250,8 +345,17 @@ def download_video(prompt_id: str, output_dir: str, filename: str) -> str:
     raise RuntimeError("未找到视频输出")
 
 
-def log_generation(log_file: str, shot_id: str, tool: str, prompt: str,
-                   seed: int, status: str, output_file: str, duration_sec: float, note: str):
+def log_generation(
+    log_file: str,
+    shot_id: str,
+    tool: str,
+    prompt: str,
+    seed: int,
+    status: str,
+    output_file: str,
+    duration_sec: float,
+    note: str,
+):
     """记录生成日志到 CSV。"""
     log_path = Path(log_file)
     file_exists = log_path.is_file()
@@ -259,10 +363,32 @@ def log_generation(log_file: str, shot_id: str, tool: str, prompt: str,
     with open(log_path, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if not file_exists:
-            writer.writerow(["timestamp", "shot_id", "tool", "prompt", "seed",
-                             "status", "output_file", "duration_sec", "note"])
-        writer.writerow([datetime.now().isoformat(), shot_id, tool, prompt[:200],
-                         seed, status, output_file, f"{duration_sec:.1f}", note])
+            writer.writerow(
+                [
+                    "timestamp",
+                    "shot_id",
+                    "tool",
+                    "prompt",
+                    "seed",
+                    "status",
+                    "output_file",
+                    "duration_sec",
+                    "note",
+                ]
+            )
+        writer.writerow(
+            [
+                datetime.now().isoformat(),
+                shot_id,
+                tool,
+                prompt[:200],
+                seed,
+                status,
+                output_file,
+                f"{duration_sec:.1f}",
+                note,
+            ]
+        )
 
 
 # ==================== 主流程 ====================
@@ -304,8 +430,17 @@ def main():
         keyframe_path = KEYFRAME_DIR / shot["keyframe"]
         if not keyframe_path.exists():
             print(f"  [SKIP] 关键帧不存在: {keyframe_path}")
-            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_I2V", shot["prompt"],
-                           0, "skipped", "", 0, "关键帧不存在")
+            log_generation(
+                str(LOG_FILE),
+                shot["id"],
+                "Wan2.2_I2V",
+                shot["prompt"],
+                0,
+                "skipped",
+                "",
+                0,
+                "关键帧不存在",
+            )
             continue
 
         seed = 2000 + i
@@ -327,15 +462,33 @@ def main():
             output_path = download_video(prompt_id, str(OUTPUT_DIR), filename)
 
             elapsed = time.time() - start_time
-            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_I2V", shot["prompt"],
-                           seed, "success", filename, elapsed, "")
+            log_generation(
+                str(LOG_FILE),
+                shot["id"],
+                "Wan2.2_I2V",
+                shot["prompt"],
+                seed,
+                "success",
+                filename,
+                elapsed,
+                "",
+            )
             success_count += 1
 
         except Exception as e:
             elapsed = time.time() - start_time
             print(f"  [FAILED] {e}")
-            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_I2V", shot["prompt"],
-                           seed, "failed", "", elapsed, str(e))
+            log_generation(
+                str(LOG_FILE),
+                shot["id"],
+                "Wan2.2_I2V",
+                shot["prompt"],
+                seed,
+                "failed",
+                "",
+                elapsed,
+                str(e),
+            )
             fail_count += 1
 
     # --- T2V 镜头 ---
@@ -358,15 +511,33 @@ def main():
             output_path = download_video(prompt_id, str(OUTPUT_DIR), filename)
 
             elapsed = time.time() - start_time
-            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_T2V", shot["prompt"],
-                           seed, "success", filename, elapsed, "")
+            log_generation(
+                str(LOG_FILE),
+                shot["id"],
+                "Wan2.2_T2V",
+                shot["prompt"],
+                seed,
+                "success",
+                filename,
+                elapsed,
+                "",
+            )
             success_count += 1
 
         except Exception as e:
             elapsed = time.time() - start_time
             print(f"  [FAILED] {e}")
-            log_generation(str(LOG_FILE), shot["id"], "Wan2.2_T2V", shot["prompt"],
-                           seed, "failed", "", elapsed, str(e))
+            log_generation(
+                str(LOG_FILE),
+                shot["id"],
+                "Wan2.2_T2V",
+                shot["prompt"],
+                seed,
+                "failed",
+                "",
+                elapsed,
+                str(e),
+            )
             fail_count += 1
 
     # --- 汇总 ---

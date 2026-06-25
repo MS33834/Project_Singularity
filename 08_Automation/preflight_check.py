@@ -9,11 +9,11 @@ Project Singularity
 """
 
 import os
-import sys
 import shutil
 import subprocess
-from pathlib import Path
+import sys
 from datetime import datetime
+from pathlib import Path
 
 # ==================== 配置区 ====================
 
@@ -89,6 +89,7 @@ def check_gpu(result: CheckResult):
     print("\n[1/8] 检查 GPU...")
     try:
         import torch
+
         if not torch.cuda.is_available():
             result.error("CUDA 不可用，无法运行 GPU 任务")
             return
@@ -108,6 +109,7 @@ def check_ram(result: CheckResult):
     """检查内存（跨平台）。"""
     print("\n[2/8] 检查内存...")
     import platform
+
     system = platform.system()
     try:
         if system == "Linux":
@@ -119,6 +121,7 @@ def check_ram(result: CheckResult):
                         break
         elif system == "Windows":
             import ctypes
+
             class MEMORYSTATUSEX(ctypes.Structure):
                 _fields_ = [
                     ("dwLength", ctypes.c_ulong),
@@ -131,12 +134,14 @@ def check_ram(result: CheckResult):
                     ("ullAvailVirtual", ctypes.c_ulonglong),
                     ("ullAvailExtendedVirtual", ctypes.c_ulonglong),
                 ]
+
             stat = MEMORYSTATUSEX()
             stat.dwLength = ctypes.sizeof(stat)
             ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
             ram_gb = stat.ullTotalPhys / 1024**3
         elif system == "Darwin":
             import subprocess
+
             output = subprocess.check_output(["sysctl", "-n", "hw.memsize"], text=True)
             ram_gb = int(output.strip()) / 1024**3
         else:
@@ -171,7 +176,9 @@ def check_software(result: CheckResult):
         path = shutil.which(cmd)
         if path:
             try:
-                version = subprocess.check_output([cmd, "--version"], capture_output=True, text=True, timeout=5)
+                version = subprocess.check_output(
+                    [cmd, "--version"], capture_output=True, text=True, timeout=5
+                )
                 version_str = version.strip().split("\n")[0][:60]
                 result.ok(f"{name}: {version_str}")
             except Exception:
@@ -214,6 +221,7 @@ def check_comfyui(result: CheckResult):
 
     # 检查 ComfyUI 是否运行
     import requests
+
     try:
         resp = requests.get("http://127.0.0.1:8188/system_stats", timeout=3)
         if resp.status_code == 200:
@@ -259,10 +267,17 @@ def check_project_structure(result: CheckResult):
     """检查项目目录结构。"""
     print("\n[额外] 检查项目目录结构...")
     required_dirs = [
-        "01_Assets/Characters", "01_Assets/Scenes", "01_Assets/Audio",
-        "02_Scripts", "03_Workflows", "04_SOP",
-        "05_Output/Rough_Cuts", "05_Output/Final",
-        "06_Research", "07_Team", "08_Automation",
+        "01_Assets/Characters",
+        "01_Assets/Scenes",
+        "01_Assets/Audio",
+        "02_Scripts",
+        "03_Workflows",
+        "04_SOP",
+        "05_Output/Rough_Cuts",
+        "05_Output/Final",
+        "06_Research",
+        "07_Team",
+        "08_Automation",
     ]
     for d in required_dirs:
         dir_path = PROJECT_ROOT / d

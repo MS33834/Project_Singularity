@@ -35,12 +35,14 @@ def safe_input(prompt: str) -> str:
         print("  [非交互环境，使用默认值 N/A]")
         return ""
 
+
 # ==================== 工具函数 ====================
 
 
 def get_gpu_info() -> dict:
     """获取 GPU 信息。"""
     import torch  # 延迟导入，避免无 GPU 环境下 import 失败
+
     info = {
         "gpu_name": torch.cuda.get_device_name(0),
         "total_vram_gb": torch.cuda.get_device_properties(0).total_memory / 1024**3,
@@ -53,6 +55,7 @@ def get_gpu_info() -> dict:
 def get_vram_usage() -> dict:
     """获取当前显存使用。"""
     import torch
+
     allocated = torch.cuda.memory_allocated(0) / 1024**3
     reserved = torch.cuda.memory_reserved(0) / 1024**3
     return {"allocated_gb": round(allocated, 2), "reserved_gb": round(reserved, 2)}

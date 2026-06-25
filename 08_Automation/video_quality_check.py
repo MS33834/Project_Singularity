@@ -18,12 +18,12 @@ Project Singularity
 输出: 06_Research/video_quality_report.md
 """
 
-import os
-import sys
 import json
+import os
 import subprocess
-from pathlib import Path
+import sys
 from datetime import datetime
+from pathlib import Path
 
 # ==================== 配置区 ====================
 
@@ -33,14 +33,14 @@ OUTPUT_FILE = PROJECT_ROOT / "06_Research" / "video_quality_report.md"
 
 # 质量阈值
 THRESHOLDS = {
-    "min_resolution": 720,       # 最低高度
-    "expected_fps": 24,          # 预期帧率
-    "min_duration": 2.0,         # 最短时长（秒）
-    "max_duration": 10.0,        # 最长时长（秒）
-    "max_black_ratio": 0.1,      # 黑帧最大比例
-    "max_white_ratio": 0.1,      # 白帧最大比例
-    "min_sharpness": 100,        # 最低锐度（拉普拉斯方差）
-    "max_flicker_score": 30,     # 最大闪烁分数
+    "min_resolution": 720,  # 最低高度
+    "expected_fps": 24,  # 预期帧率
+    "min_duration": 2.0,  # 最短时长（秒）
+    "max_duration": 10.0,  # 最长时长（秒）
+    "max_black_ratio": 0.1,  # 黑帧最大比例
+    "max_white_ratio": 0.1,  # 白帧最大比例
+    "min_sharpness": 100,  # 最低锐度（拉普拉斯方差）
+    "max_flicker_score": 30,  # 最大闪烁分数
 }
 
 # ==================== 工具函数 ====================
@@ -49,8 +49,14 @@ THRESHOLDS = {
 def run_ffprobe(video_path: str) -> dict:
     """使用 ffprobe 获取视频信息。"""
     cmd = [
-        "ffprobe", "-v", "quiet", "-print_format", "json",
-        "-show_format", "-show_streams", video_path
+        "ffprobe",
+        "-v",
+        "quiet",
+        "-print_format",
+        "json",
+        "-show_format",
+        "-show_streams",
+        video_path,
     ]
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
@@ -66,10 +72,17 @@ def extract_frames(video_path: str, output_dir: str, max_frames: int = 10) -> li
     os.makedirs(output_dir, exist_ok=True)
     # 均匀提取 max_frames 帧
     cmd = [
-        "ffmpeg", "-i", video_path,
-        "-vf", f"select='not(mod(n\\,max(1\\,floor(tb*duration/{max_frames}))))'",
-        "-vsync", "vfr", "-frames:v", str(max_frames),
-        "-y", os.path.join(output_dir, "frame_%03d.png")
+        "ffmpeg",
+        "-i",
+        video_path,
+        "-vf",
+        f"select='not(mod(n\\,max(1\\,floor(tb*duration/{max_frames}))))'",
+        "-vsync",
+        "vfr",
+        "-frames:v",
+        str(max_frames),
+        "-y",
+        os.path.join(output_dir, "frame_%03d.png"),
     ]
     try:
         subprocess.run(cmd, capture_output=True, timeout=60)
@@ -85,6 +98,7 @@ def analyze_sharpness(frame_path: str) -> float:
     try:
         import cv2
         import numpy as np
+
         img = cv2.imread(frame_path)
         if img is None:
             return 0
@@ -101,6 +115,7 @@ def analyze_brightness(frame_path: str) -> tuple:
     try:
         import cv2
         import numpy as np
+
         img = cv2.imread(frame_path)
         if img is None:
             return (0, False, False)
@@ -122,6 +137,7 @@ def analyze_flicker(frame_paths: list) -> float:
     try:
         import cv2
         import numpy as np
+
         brightnesses = []
         for fp in frame_paths:
             img = cv2.imread(fp)
@@ -205,6 +221,7 @@ def check_video(video_path: str, temp_dir: str) -> dict:
     # 7. 帧分析（如有 cv2）
     try:
         import cv2  # noqa
+
         frame_dir = os.path.join(temp_dir, os.path.splitext(result["filename"])[0])
         frames = extract_frames(video_path, frame_dir, max_frames=10)
 
@@ -216,7 +233,9 @@ def check_video(video_path: str, temp_dir: str) -> dict:
                 avg_sharpness = sum(valid_sharp) / len(valid_sharp)
                 result["avg_sharpness"] = round(avg_sharpness, 1)
                 if avg_sharpness < THRESHOLDS["min_sharpness"]:
-                    result["issues"].append(f"[警告] 锐度 {avg_sharpness:.1f} 低于 {THRESHOLDS['min_sharpness']}，可能模糊")
+                    result["issues"].append(
+                        f"[警告] 锐度 {avg_sharpness:.1f} 低于 {THRESHOLDS['min_sharpness']}，可能模糊"
+                    )
                     result["score"] -= 15
 
             # 亮度与黑白帧
@@ -244,7 +263,9 @@ def check_video(video_path: str, temp_dir: str) -> dict:
             if flicker >= 0:
                 result["flicker_score"] = round(flicker, 1)
                 if flicker > THRESHOLDS["max_flicker_score"]:
-                    result["issues"].append(f"[警告] 闪烁分数 {flicker:.1f} 超过 {THRESHOLDS['max_flicker_score']}，可能闪烁严重")
+                    result["issues"].append(
+                        f"[警告] 闪烁分数 {flicker:.1f} 超过 {THRESHOLDS['max_flicker_score']}，可能闪烁严重"
+                    )
                     result["score"] -= 15
 
             # 清理临时帧
@@ -254,7 +275,9 @@ def check_video(video_path: str, temp_dir: str) -> dict:
                 except Exception:
                     pass
     except ImportError:
-        result["issues"].append("[提示] 未安装 opencv-python，跳过帧分析（pip install opencv-python）")
+        result["issues"].append(
+            "[提示] 未安装 opencv-python，跳过帧分析（pip install opencv-python）"
+        )
 
     result["score"] = max(0, result["score"])
     return result
@@ -301,6 +324,7 @@ def main():
     # 清理临时目录
     try:
         import shutil
+
         shutil.rmtree(temp_dir, ignore_errors=True)
     except Exception:
         pass
@@ -330,8 +354,12 @@ def main():
 
     # 详细结果
     report.append("## 详细检测结果\n")
-    report.append("| 文件 | 分辨率 | 帧率 | 时长(s) | 编码 | 大小(MB) | 锐度 | 闪烁 | 分数 | 状态 |")
-    report.append("|------|--------|------|---------|------|----------|------|------|------|------|")
+    report.append(
+        "| 文件 | 分辨率 | 帧率 | 时长(s) | 编码 | 大小(MB) | 锐度 | 闪烁 | 分数 | 状态 |"
+    )
+    report.append(
+        "|------|--------|------|---------|------|----------|------|------|------|------|"
+    )
     for r in results:
         status = "✅" if r["score"] >= 80 else "⚠️" if r["score"] >= 50 else "❌"
         report.append(

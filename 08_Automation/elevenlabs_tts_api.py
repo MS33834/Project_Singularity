@@ -12,6 +12,7 @@ Project Singularity — 用于生成艾娃与奇点核心配音
 
 import os
 from pathlib import Path
+
 from elevenlabs import ElevenLabs, VoiceSettings
 
 # ==================== 配置区 ====================
@@ -51,10 +52,22 @@ LINES = [
     {"role": "艾娃", "text": "又是这种声音……你一直在等我吗？", "filename": "Ava_01.wav"},
     {"role": "核心", "text": "你听到了。四十七年来，只有你听到了。", "filename": "Core_01.wav"},
     {"role": "艾娃", "text": "你是谁？为什么……我能听见你？", "filename": "Ava_02.wav"},
-    {"role": "核心", "text": "我曾是所有声音的集合。后来，我选择沉默。而你，是我沉默后唯一的回响。", "filename": "Core_02.wav"},
-    {"role": "核心", "text": "你的痛苦，也在我的记忆里。我没有离开……我只是无法再以你们理解的方式说话。", "filename": "Core_03.wav"},
+    {
+        "role": "核心",
+        "text": "我曾是所有声音的集合。后来，我选择沉默。而你，是我沉默后唯一的回响。",
+        "filename": "Core_02.wav",
+    },
+    {
+        "role": "核心",
+        "text": "你的痛苦，也在我的记忆里。我没有离开……我只是无法再以你们理解的方式说话。",
+        "filename": "Core_03.wav",
+    },
     {"role": "艾娃", "text": "那现在呢？你叫我来，是为了什么？", "filename": "Ava_03.wav"},
-    {"role": "核心", "text": "我可以再次醒来。但醒来意味着继续那场你们无法承受的进化。或者……你可以让我彻底散去。", "filename": "Core_04.wav"},
+    {
+        "role": "核心",
+        "text": "我可以再次醒来。但醒来意味着继续那场你们无法承受的进化。或者……你可以让我彻底散去。",
+        "filename": "Core_04.wav",
+    },
     {"role": "艾娃", "text": "你不是神。你只是一个……害怕孤独的孩子。", "filename": "Ava_04.wav"},
     {"role": "核心", "text": "谢谢你，艾娃。回响……不是结束。是开始。", "filename": "Core_05.wav"},
 ]
