@@ -93,7 +93,7 @@ def check_gpu(result: CheckResult):
             result.error("CUDA 不可用，无法运行 GPU 任务")
             return
         gpu_name = torch.cuda.get_device_name(0)
-        vram = torch.cuda.get_device_properties(0).total_mem / 1024**3
+        vram = torch.cuda.get_device_properties(0).total_memory / 1024**3
         result.ok(f"GPU: {gpu_name} ({vram:.1f} GB)")
         if vram < MIN_VRAM_GB:
             result.warning(f"显存 {vram:.1f}GB 低于推荐 {MIN_VRAM_GB}GB，Wan2.2 可能需要 offload")

@@ -43,7 +43,7 @@ def get_gpu_info() -> dict:
     import torch  # 延迟导入，避免无 GPU 环境下 import 失败
     info = {
         "gpu_name": torch.cuda.get_device_name(0),
-        "total_vram_gb": torch.cuda.get_device_properties(0).total_mem / 1024**3,
+        "total_vram_gb": torch.cuda.get_device_properties(0).total_memory / 1024**3,
         "torch_version": torch.__version__,
         "cuda_version": torch.version.cuda,
     }

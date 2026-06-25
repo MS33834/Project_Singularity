@@ -135,15 +135,17 @@ def submit_i2v_prompt(workflow: dict, image_name: str, prompt_text: str, seed: i
         # 设置 seed（仅采样器节点）
         if cls in ("KSampler", "KSamplerAdvanced", "WanVideoSampler"):
             inputs["seed"] = seed
-        # 设置帧数（覆盖所有可能的视频生成节点类型）
+        # 设置帧数（仅目标视频生成节点）
         if cls in ("KSampler", "KSamplerAdvanced", "WanVideoSampler"):
             if "length" in inputs:
                 inputs["length"] = frames
         if cls in ("WanImageToVideo", "WanTextToVideo"):
             if "length" in inputs:
                 inputs["length"] = frames
-        if "frames" in inputs:
-            inputs["frames"] = frames
+        # 仅对已知视频相关节点设置 frames，避免误改其他节点
+        if cls in ("WanImageToVideo", "WanTextToVideo", "VideoCombine", "SaveAnimatedWEBP", "SaveVideo"):
+            if "frames" in inputs:
+                inputs["frames"] = frames
 
     # 设置输出文件名
     for node_id, node_data in workflow.items():
@@ -159,7 +161,12 @@ def submit_i2v_prompt(workflow: dict, image_name: str, prompt_text: str, seed: i
 
 def submit_t2v_prompt(workflow: dict, prompt_text: str, seed: int, frames: int) -> str:
     """提交 T2V 生成任务（无输入图）。"""
-    # 禁用 LoadImage 节点（或使用空 latent）
+    # 禁用 LoadImage 节点：标记 _meta 为禁用或移除输入，避免 T2V 误用图片
+    for node_id, node_data in workflow.items():
+        if node_data.get("class_type") == "LoadImage":
+            # 安全做法：禁用该节点
+            node_data["inputs"]["image"] = ""
+
     # 设置提示词
     for node_id, node_data in workflow.items():
         if node_data.get("class_type") == "CLIPTextEncode":
@@ -172,15 +179,17 @@ def submit_t2v_prompt(workflow: dict, prompt_text: str, seed: int, frames: int) 
         # 设置 seed（仅采样器节点）
         if cls in ("KSampler", "KSamplerAdvanced", "WanVideoSampler"):
             inputs["seed"] = seed
-        # 设置帧数（覆盖所有可能的视频生成节点类型）
+        # 设置帧数（仅目标视频生成节点）
         if cls in ("KSampler", "KSamplerAdvanced", "WanVideoSampler"):
             if "length" in inputs:
                 inputs["length"] = frames
         if cls in ("WanImageToVideo", "WanTextToVideo"):
             if "length" in inputs:
                 inputs["length"] = frames
-        if "frames" in inputs:
-            inputs["frames"] = frames
+        # 仅对已知视频相关节点设置 frames，避免误改其他节点
+        if cls in ("WanImageToVideo", "WanTextToVideo", "VideoCombine", "SaveAnimatedWEBP", "SaveVideo"):
+            if "frames" in inputs:
+                inputs["frames"] = frames
 
     for node_id, node_data in workflow.items():
         if node_data.get("class_type") in ("VideoCombine", "SaveAnimatedWEBP", "SaveVideo"):

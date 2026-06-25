@@ -1,6 +1,6 @@
 # Project Singularity — ComfyUI 工作流节点连接说明
 
-> 本文档为 AIGC 科幻微短剧《奇点回响》(Project Singularity) 的 ComfyUI 工作流详细节点连接指南，供技术总监与 AI 操作员在 ComfyUI 中搭建工作流时参考。
+> 本文档为 AIGC 科幻微短剧《奇点回响》(Project Singularity) 的 ComfyUI 工作流详细节点连接指南，供技术总监与 AI 算法工程师在 ComfyUI 中搭建工作流时参考。
 >
 > 配套文件：
 > - `03_Workflows/Flux_Character_Consistency.json` — Flux.1 Kontext [dev] + IPAdapter 角色一致性出图
