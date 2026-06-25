@@ -233,16 +233,21 @@ def run_comfyui_task(task: dict, workflow_file: str, is_t2v: bool = False) -> bo
 def run_kling_task(task: dict) -> bool:
     """执行可灵视频生成。"""
     script = Path(__file__).resolve().parent / "kling_video_api.py"
-    # 实际执行时设置环境变量或修改脚本配置
+    project_root = Path(__file__).resolve().parent.parent
+    shot_id = task.get("shot_id", "S01_04")
+    env = {
+        **os.environ,
+        "KLING_PROMPT": task.get("prompt", ""),
+        "KLING_SHOT_ID": shot_id,
+        "KLING_START_IMAGE": str(project_root / "01_Assets" / "Scenes" / f"{shot_id}_start.png"),
+        "KLING_END_IMAGE": str(project_root / "01_Assets" / "Scenes" / f"{shot_id}_end.png"),
+    }
     result = subprocess.run(
         [sys.executable, str(script)],
         capture_output=True, text=True, timeout=600,
-        env={**os.environ, "KLING_PROMPT": task["prompt"]}
+        env=env,
     )
-    if result.returncode == 0:
-        return True
-    task["error"] = result.stderr[:200]
-    return False
+    return result.returncode == 0
 
 
 def run_tts_task(task: dict) -> bool:

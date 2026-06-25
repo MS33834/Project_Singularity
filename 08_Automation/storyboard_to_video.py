@@ -131,12 +131,19 @@ def submit_i2v_prompt(workflow: dict, image_name: str, prompt_text: str, seed: i
     # 设置 seed 和帧数
     for node_id, node_data in workflow.items():
         cls = node_data.get("class_type", "")
+        inputs = node_data["inputs"]
+        # 设置 seed（仅采样器节点）
         if cls in ("KSampler", "KSamplerAdvanced", "WanVideoSampler"):
-            node_data["inputs"]["seed"] = seed
-            if "length" in node_data["inputs"]:
-                node_data["inputs"]["length"] = frames
-            elif "frames" in node_data["inputs"]:
-                node_data["inputs"]["frames"] = frames
+            inputs["seed"] = seed
+        # 设置帧数（覆盖所有可能的视频生成节点类型）
+        if cls in ("KSampler", "KSamplerAdvanced", "WanVideoSampler"):
+            if "length" in inputs:
+                inputs["length"] = frames
+        if cls in ("WanImageToVideo", "WanTextToVideo"):
+            if "length" in inputs:
+                inputs["length"] = frames
+        if "frames" in inputs:
+            inputs["frames"] = frames
 
     # 设置输出文件名
     for node_id, node_data in workflow.items():
@@ -161,12 +168,19 @@ def submit_t2v_prompt(workflow: dict, prompt_text: str, seed: int, frames: int) 
 
     for node_id, node_data in workflow.items():
         cls = node_data.get("class_type", "")
+        inputs = node_data["inputs"]
+        # 设置 seed（仅采样器节点）
         if cls in ("KSampler", "KSamplerAdvanced", "WanVideoSampler"):
-            node_data["inputs"]["seed"] = seed
-            if "length" in node_data["inputs"]:
-                node_data["inputs"]["length"] = frames
-            elif "frames" in node_data["inputs"]:
-                node_data["inputs"]["frames"] = frames
+            inputs["seed"] = seed
+        # 设置帧数（覆盖所有可能的视频生成节点类型）
+        if cls in ("KSampler", "KSamplerAdvanced", "WanVideoSampler"):
+            if "length" in inputs:
+                inputs["length"] = frames
+        if cls in ("WanImageToVideo", "WanTextToVideo"):
+            if "length" in inputs:
+                inputs["length"] = frames
+        if "frames" in inputs:
+            inputs["frames"] = frames
 
     for node_id, node_data in workflow.items():
         if node_data.get("class_type") in ("VideoCombine", "SaveAnimatedWEBP", "SaveVideo"):
@@ -197,7 +211,12 @@ def check_status(prompt_id: str, interval: int = 10, max_retry: int = 180) -> bo
 
 
 def download_video(prompt_id: str, output_dir: str, filename: str) -> str:
-    """下载生成的视频。"""
+    """下载生成的视频。
+
+    注意：Wan22 工作流可能输出 .webp 格式（SaveAnimatedWEBP 节点），
+    但此处统一以 .mp4 命名。如需在剪辑软件中使用，可能需要用 ffmpeg 转码：
+    ffmpeg -i input.webp -c:v libx264 output.mp4
+    """
     url = f"{COMFYUI_URL}/history/{prompt_id}"
     response = requests.get(url, timeout=10)
     response.raise_for_status()

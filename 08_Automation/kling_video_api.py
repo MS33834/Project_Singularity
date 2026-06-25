@@ -11,7 +11,6 @@ Project Singularity — 用于生成复杂镜头/首尾帧约束视频
 """
 
 import os
-import sys
 import time
 import base64
 import requests
@@ -140,7 +139,8 @@ def main():
     print(f"[Info] 视频 URL: {video_url}")
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    output_path = OUTPUT_DIR / f"S01_04_Kling_{task_id}.mp4"
+    shot_id = os.getenv("KLING_SHOT_ID", "S01_04")
+    output_path = OUTPUT_DIR / f"{shot_id}_Kling_{task_id}.mp4"
     download_video(video_url, str(output_path))
 
 

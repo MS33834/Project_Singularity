@@ -8,9 +8,9 @@ Project Singularity
 输出: 控制台打印 + 07_Team/daily_briefs/YYYY-MM-DD.md
 """
 
-import os
 import re
 import csv
+import json
 from pathlib import Path
 from datetime import datetime
 
@@ -59,7 +59,6 @@ def parse_render_queue(filepath: Path) -> dict:
     """解析渲染队列。"""
     if not filepath.exists():
         return {"pending": 0, "running": 0, "completed": 0, "failed": 0}
-    import json
     with open(filepath, "r", encoding="utf-8") as f:
         queue = json.load(f)
     pending = len([t for t in queue.get("tasks", []) if t.get("status") == "pending"])
@@ -166,7 +165,7 @@ def main():
     brief.append("## 三、资产统计\n")
     brief.append("| 资产类型 | 当前数量 | 目标 | 状态 |")
     brief.append("|----------|----------|------|------|")
-    brief.append(f"| 场景关键帧 | {assets['keyframes']} | 24 | {'✅' if assets['keyframes'] >= 24 else '⏳'} |")
+    brief.append(f"| 场景关键帧 | {assets['keyframes']} | 29 | {'✅' if assets['keyframes'] >= 29 else '⏳'} |")
     brief.append(f"| 原始视频 | {assets['videos']} | 24 | {'✅' if assets['videos'] >= 24 else '⏳'} |")
     brief.append(f"| 音频素材 | {assets['audio']} | 15+ | {'✅' if assets['audio'] >= 15 else '⏳'} |")
     brief.append(f"| 最终成片 | {assets['final']} | 1 | {'✅' if assets['final'] >= 1 else '⏳'} |")

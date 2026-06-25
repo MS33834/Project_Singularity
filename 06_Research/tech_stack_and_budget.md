@@ -53,7 +53,7 @@
 
 **项目适配建议**：
 - 复杂镜头与转场优先用可灵首尾帧功能，降低运动崩坏概率。
-- 预算按 20 个复杂镜头、每个 5 秒估算，约 $4–20。
+- 预算按 5 个复杂镜头、每个 5 秒估算，约 $4–20。
 
 ## 二、音效 / 配乐 / 配音成本
 
@@ -66,7 +66,7 @@
 | Creator | $22/月 | 100k credits/月（约 100 分钟） |
 | Pro | $99/月 | 500k credits/月（约 500 分钟） |
 | API 按量 | $0.1/1K chars（Multilingual v2/v3）；$0.05/1K chars（Flash/Turbo） | 按字符计费 |
-| 参考 | [ElevenLabs Pricing](https://elevenlabs.io/pricing/api) |
+| 参考 | [ElevenLabs Pricing](https://elevenlabs.io/pricing/api) | |
 
 **项目适配建议**：
 - 3-5 分钟短片对白约 500-1500 字符，Creator 计划足够覆盖。
@@ -81,7 +81,7 @@
 | Suno | Premier | $30/月 | 10,000 credits/月 |
 | Udio | Standard | $10/月 | 1,200 credits/月（约 2,400 首） |
 | Udio | Pro | $30/月 | 6,000 credits/月 |
-| 参考 | [Suno Pricing](https://artificial-intelligence-wiki.com/generative-ai/ai-music-generation/suno-ai-pricing-plans/)、[Udio vs Suno 对比](https://artificial-intelligence-wiki.com/generative-ai/ai-music-generation/udio-vs-suno-comparison/) |
+| 参考 | [Suno Pricing](https://artificial-intelligence-wiki.com/generative-ai/ai-music-generation/suno-ai-pricing-plans/)、[Udio vs Suno 对比](https://artificial-intelligence-wiki.com/generative-ai/ai-music-generation/udio-vs-suno-comparison/) | |
 
 **项目适配建议**：
 - 科幻氛围背景音乐建议使用 Suno Pro 或 Udio Standard。
@@ -94,7 +94,7 @@
 | Topaz Video（Personal） | $299/年 | 无限本地渲染，25 个/月云端视频 credits，有限商业使用 |
 | Topaz Video Pro | $699/年 | 含本地 Starlight 模型、100 个/月云端 credits、完整商业授权 |
 | Topaz Studio | $399/年 | 包含 Video + Photo + Gigapixel 等全套工具，300 个/月云端视频 credits |
-| 参考 | [Topaz Video AI](https://www.topazlabs.com/topaz-video-ai)、[Topaz Video Pro](https://www.topazlabs.com/video-pro) |
+| 参考 | [Topaz Video AI](https://www.topazlabs.com/topaz-video-ai)、[Topaz Video Pro](https://www.topazlabs.com/video-pro) | |
 
 **项目适配建议**：
 - 项目周期 6 周，选择 **Topaz Video Personal（$299/年）** 即可满足 4K 超分与降噪需求。
@@ -136,7 +136,7 @@
 | | ElevenLabs Creator（1 个月） | ¥160（约 $22） |
 | | Suno Pro / Udio Standard（1 个月） | ¥75（约 $10） |
 | | 剪映专业版 / 达芬奇（免费或 Resolve Studio 一次性） | ¥0–2,600 |
-| **云端 API** | 可灵 2.5 Turbo（20 个复杂镜头） | ¥30–150 |
+| **云端 API** | 可灵 2.5 Turbo（5 个复杂镜头） | ¥30–150 |
 | | 云端 GPU 弹性扩容（可选 200hr） | ¥200–1,000 |
 | **模型/资产** | Civitai/HuggingFace LoRA、风格模型（可选） | ¥0–500 |
 | **人力** | 9 人核心团队 × 6 周（按市场 freelance/兼职估算） | ¥30,000–80,000 |

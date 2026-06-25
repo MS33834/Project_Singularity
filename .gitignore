@@ -46,6 +46,7 @@ build/
 # --- ComfyUI 输出缓存（仅根目录级别） ---
 /output/
 /temp/
+06_Research/_temp_frames/
 *.tmp
 
 # --- 系统文件 ---

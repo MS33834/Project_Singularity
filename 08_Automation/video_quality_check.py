@@ -5,7 +5,7 @@
 Project Singularity
 
 用法: python video_quality_check.py [视频目录]
-默认: 检查 ../05_Output/Rough_Cuts/
+默认: 检查 05_Output/Rough_Cuts/（基于 PROJECT_ROOT）
 
 检测项目:
 1. 分辨率与帧率

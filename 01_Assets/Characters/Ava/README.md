@@ -38,7 +38,7 @@ glowing orange bracelet on left wrist, weathered data terminal at waist
 
 ## 一致性标准
 
-- 盲测平均分: 4.7/5.0
+- 盲测方案就绪，待实机验证
 - 跨镜头相似度: >95% (主观认定)
 - 不可变特征: 短发、琥珀色眼睛、右眼下疤痕、颈后神经接口、右肩补丁、橙色手镯
 

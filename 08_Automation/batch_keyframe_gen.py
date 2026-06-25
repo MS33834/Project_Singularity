@@ -246,14 +246,6 @@ def load_workflow_template() -> dict:
         return json.load(f)
 
 
-def find_node_by_class(workflow: dict, node_class: str) -> str:
-    """在工作流中查找指定类型的节点 ID。"""
-    for node_id, node_data in workflow.items():
-        if node_data.get("class_type") == node_class:
-            return node_id
-    return None
-
-
 def submit_prompt(workflow: dict, prompt_text: str, negative_text: str, seed: int) -> str:
     """提交提示词到 ComfyUI，返回 prompt_id。"""
     # 查找正面/负面提示词节点

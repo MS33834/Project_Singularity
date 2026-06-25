@@ -11,7 +11,6 @@ Project Singularity — 用于生成艾娃与奇点核心配音
 """
 
 import os
-import sys
 from pathlib import Path
 from elevenlabs import ElevenLabs, VoiceSettings
 
