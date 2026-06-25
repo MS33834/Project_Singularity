@@ -1,6 +1,11 @@
 # Project Singularity | 奇点回响
 
-一套从剧本到 4K 母版的 AIGC 视频工业化流程模板。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![ComfyUI](https://img.shields.io/badge/ComfyUI-Workflow-green.svg)](./03_Workflows/)
+[![Docker](https://img.shields.io/badge/Docker-Supported-2496ED.svg)](./docker-compose.yml)
+
+> 一套从剧本到 4K 母版的 AIGC 视频工业化流程模板。
 
 本仓库以科幻微短剧《奇点回响》为示例，把我们在 AIGC 短片制作过程中踩过的坑、调过的参数、验证过的流程整理成一套可复用的工作流。你可以直接套用这套流程做自己的短片，也可以只拿走其中某个环节（比如角色一致性方案或视频质检脚本）。
 
@@ -25,6 +30,61 @@
 5. **工程化**：ComfyUI 工作流 JSON、Python 自动化脚本、QA 检测、双仓库同步。
 
 详细流程见 [`AIGC_Experience_Chain.md`](./AIGC_Experience_Chain.md)。
+
+---
+
+## 架构概览
+
+```mermaid
+flowchart TB
+    subgraph Pre["策划层"]
+        A[剧本与世界观]
+        B[角色圣经]
+        C[24 镜头分镜表]
+    end
+
+    subgraph Asset["资产层"]
+        D[Flux.1 Kontext + IPAdapter]
+        E[29 张关键帧]
+    end
+
+    subgraph Motion["动态层"]
+        F[Wan2.2 I2V 14B]
+        G[可灵 2.5 Turbo]
+        H[19 个标准镜头]
+        I[5 个复杂镜头]
+    end
+
+    subgraph Post["合成层"]
+        J[达芬奇剪辑调色]
+        K[ElevenLabs 配音]
+        L[Suno 配乐]
+        M[Topaz 4K 超分]
+    end
+
+    subgraph Release["发布层"]
+        N[4K 母版]
+        O[ComfyUI 工作流打包]
+        P[教程与展示]
+    end
+
+    A --> D
+    B --> D
+    C --> E
+    D --> E
+    E --> F
+    E --> G
+    F --> H
+    G --> I
+    H --> J
+    I --> J
+    J --> M
+    K --> J
+    L --> J
+    M --> N
+    N --> O
+    O --> P
+```
 
 ---
 
@@ -66,12 +126,18 @@ Project_Singularity/
 ├── 08_Automation/          # 部署、生成、质检、同步脚本
 ├── 09_Release/             # 发布检查清单与展示模板
 ├── examples/               # 示例输入/输出
+├── .github/                # Issue 与 PR 模板
 ├── AIGC_Experience_Chain.md
 ├── CHANGELOG.md
+├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
 ├── COST_ANALYSIS.md
+├── Dockerfile
 ├── LICENSE
+├── Makefile
+├── ROADMAP.md
 ├── TROUBLESHOOTING.md
+├── docker-compose.yml
 ├── 项目计划书_完整版.md
 ├── 项目进度检查清单.md
 └── tasks.md
@@ -136,6 +202,22 @@ python 08_Automation/storyboard_to_video.py
 
 ---
 
+## Makefile 使用
+
+我们更推荐用 `make` 执行常见操作：
+
+```bash
+make help    # 查看所有命令
+make check   # 检查项目结构是否完整
+make setup   # 安装 Python 依赖
+make docker  # Docker 启动
+make test    # 运行基础检查
+make sync    # 同步双仓库
+make clean   # 清理临时文件
+```
+
+---
+
 ## 示例
 
 `examples/` 目录提供了可以直接运行或参考的示例：
@@ -164,7 +246,13 @@ python 08_Automation/storyboard_to_video.py
 
 欢迎提交 Issue 和 PR。无论是补充新的 ComfyUI 工作流、改进提示词、修复脚本 Bug，还是补充后期经验，都很有价值。
 
-具体规则见 [`CONTRIBUTING.md`](./CONTRIBUTING.md)。
+具体规则见 [`CONTRIBUTING.md`](./CONTRIBUTING.md)，行为准则见 [`CODE_OF_CONDUCT.md`](./CODE_OF_CONDUCT.md)。
+
+---
+
+## 路线图
+
+见 [`ROADMAP.md`](./ROADMAP.md)。
 
 ---
 
