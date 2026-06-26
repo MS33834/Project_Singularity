@@ -8,7 +8,9 @@ Project Singularity
 输出: 06_Research/asset_dashboard.md
 """
 
+import argparse
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -127,6 +129,17 @@ def format_size(size_bytes: int) -> str:
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Project Singularity — 资产盘点与进度看板",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="只打印到控制台，不写入 06_Research/asset_dashboard.md",
+    )
+    args = parser.parse_args()
+
     print("=" * 60)
     print("  Project Singularity — 资产盘点与进度看板")
     print("=" * 60)
@@ -281,8 +294,14 @@ def main():
 
     report.append("")
 
-    # 写入文件
     report_text = "\n".join(report)
+
+    if args.dry_run:
+        print("\n[DRY RUN] 以下报告内容不会写入文件：")
+        print(report_text)
+        return
+
+    # 写入文件
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(report_text)
 

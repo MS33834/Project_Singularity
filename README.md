@@ -196,18 +196,25 @@ cp .env.example .env
 # 3. 部署 ComfyUI（需要 NVIDIA GPU，推荐 RTX 4090 24GB）
 bash 08_Automation/deploy_comfyui.sh
 
-# 4. 安装 Python 依赖
-pip install -r 08_Automation/requirements.txt
+# 4. 安装 Python 依赖（包含 black、isort、pytest）
+make setup
 
-# 5. 预飞行检查
-python 08_Automation/preflight_check.py
+# 5. 项目结构检查
+make check
 
-# 6. 批量生成关键帧
+# 6. 预飞行检查（--dry-run 可在无 GPU 时检查结构与密钥）
+python 08_Automation/preflight_check.py --dry-run
+
+# 7. 批量生成关键帧（建议首次 --dry-run 预览）
+python 08_Automation/batch_keyframe_gen.py --dry-run
 python 08_Automation/batch_keyframe_gen.py
 
-# 7. 批量生成视频
+# 8. 批量生成视频（建议首次 --dry-run 预览）
+python 08_Automation/storyboard_to_video.py --dry-run
 python 08_Automation/storyboard_to_video.py
 ```
+
+> 注意：生成脚本会调用 ComfyUI API 或云端 API，首次运行前建议加 `--help` 或 `--dry-run`；`asset_dashboard.py` 和 `daily_brief.py` 默认会写入报告文件，可用 `--dry-run` 预览。
 
 更多细节见 [`08_Automation/README.md`](./08_Automation/README.md)。
 

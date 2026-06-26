@@ -10,7 +10,9 @@ Project Singularity — 用于生成科幻氛围配乐
 3. 若无法获取 API，可直接使用 Suno 网页版批量生成后下载。
 """
 
+import argparse
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -117,18 +119,58 @@ def download_audio(audio_url: str, output_path: str) -> None:
     print(f"[Download] {output_path}")
 
 
+def validate_api_key() -> bool:
+    """校验 API 密钥是否已配置。"""
+    if API_KEY in ("", "your_api_key_here"):
+        print("[ERROR] SUNO_API_KEY 未配置，请在 .env 中设置或 export SUNO_API_KEY")
+        return False
+    return True
+
+
 def main():
-    # 支持通过环境变量 MUSIC_PROMPT / MUSIC_TITLE / MUSIC_TAGS 生成单首配乐（供 render_queue.py 调用）
-    single_prompt = os.getenv("MUSIC_PROMPT")
-    if single_prompt:
-        title = os.getenv("MUSIC_TITLE", "Custom_Track")
-        tags = os.getenv("MUSIC_TAGS", "cinematic, sci-fi")
-        print(f"\n[Info] 开始生成: {title}")
-        task_id = submit_generation(title, tags, single_prompt, 120)
+    parser = argparse.ArgumentParser(
+        description="Project Singularity — Suno AI 配乐生成",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--prompt",
+        default=os.getenv("MUSIC_PROMPT", ""),
+        help="单首提示词（为空则生成预设 TRACKS）",
+    )
+    parser.add_argument(
+        "--title",
+        default=os.getenv("MUSIC_TITLE", "Custom_Track"),
+        help="单首标题",
+    )
+    parser.add_argument(
+        "--tags",
+        default=os.getenv("MUSIC_TAGS", "cinematic, sci-fi"),
+        help="单首标签",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="只打印参数，不提交 API",
+    )
+    args = parser.parse_args()
+
+    if args.dry_run:
+        print(
+            f"[DRY RUN] title={args.title}, tags={args.tags}, prompt={args.prompt or '(全部 TRACKS)'}"
+        )
+        return
+
+    if not validate_api_key():
+        sys.exit(1)
+
+    # 单首模式
+    if args.prompt:
+        print(f"\n[Info] 开始生成: {args.title}")
+        task_id = submit_generation(args.title, args.tags, args.prompt, 120)
         audio_urls = poll_task(task_id)
         for idx, url in enumerate(audio_urls):
             ext = ".mp3" if ".mp3" in url else ".wav"
-            output_path = OUTPUT_DIR / f"{title}_v{idx+1}{ext}"
+            output_path = OUTPUT_DIR / f"{args.title}_v{idx+1}{ext}"
             download_audio(url, str(output_path))
         print("\n[Info] 单首配乐生成完成")
         return

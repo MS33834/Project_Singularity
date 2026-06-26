@@ -34,7 +34,9 @@ def test_case_study_exists():
     assert (case / "production_plan.md").exists()
     assert (case / "production_log.md").exists()
     assert (case / "character_bible_ava.md").exists()
+    assert (case / "character_bible_ava.zh.md").exists()
     assert (case / "shot_tracker.md").exists()
+    assert (case / "shot_tracker.zh.md").exists()
 
 
 def test_dev_requirements_exist():

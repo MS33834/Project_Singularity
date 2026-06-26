@@ -9,7 +9,9 @@
 #   3. git push github main
 #   4. git push gitcode main
 #
-# 注意: 远程仓库的认证令牌已存储在 .git/config 中（不会被提交到仓库）
+# 安全提示: 不要在 .git/config 或本脚本中硬编码令牌。
+#   - HTTPS: 使用 Git 凭据管理器（git config --global credential.helper store/cache）
+#   - SSH:   使用 git@github.com:MS33834/Project_Singularity.git
 # 仓库地址:
 #   GitHub:  https://github.com/MS33834/Project_Singularity
 #   GitCode: https://gitcode.com/badhope/Project_Singularity

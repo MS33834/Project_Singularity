@@ -100,8 +100,10 @@
 ### Q: `sync_repos.sh` 推送失败
 
 **解决**：
-- 确认 `.git/config` 中远程仓库 URL 包含有效 Token；
-- 对于 GitCode，URL 格式应为 `https://oauth2:TOKEN@gitcode.com/...`；
+- 确认 `.git/config` 中远程仓库 URL 不含硬编码 Token（安全做法：使用 SSH 或 Git 凭据管理器）；
+  - HTTPS + 凭据管理器：`git config --global credential.helper store`（首次输入后自动保存）
+  - SSH：`git remote set-url github git@github.com:MS33834/Project_Singularity.git`
+- 对于 GitCode，URL 保持 `https://gitcode.com/badhope/Project_Singularity.git`，Token 由凭据管理器提供；
 - 检查网络连接。
 
 ---

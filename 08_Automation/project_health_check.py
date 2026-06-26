@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Project health check script."""
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -38,7 +39,9 @@ REQUIRED_FILES = [
     "examples/奇点回响/production_plan.md",
     "examples/奇点回响/production_log.md",
     "examples/奇点回响/character_bible_ava.md",
+    "examples/奇点回响/character_bible_ava.zh.md",
     "examples/奇点回响/shot_tracker.md",
+    "examples/奇点回响/shot_tracker.zh.md",
 ]
 
 REQUIRED_DIRS = [
@@ -78,5 +81,13 @@ def check():
     return 0
 
 
-if __name__ == "__main__":
+def main():
+    parser = argparse.ArgumentParser(
+        description="Project Singularity — 项目结构健康检查",
+    )
+    parser.parse_args()
     sys.exit(check())
+
+
+if __name__ == "__main__":
+    main()

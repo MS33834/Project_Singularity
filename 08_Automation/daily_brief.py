@@ -8,9 +8,11 @@ Project Singularity
 输出: 控制台打印 + 07_Team/daily_briefs/YYYY-MM-DD.md
 """
 
+import argparse
 import csv
 import json
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -123,6 +125,17 @@ def count_assets() -> dict:
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Project Singularity — 每日站会简报生成",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="只打印到控制台，不写入 07_Team/daily_briefs/YYYY-MM-DD.md",
+    )
+    args = parser.parse_args()
+
     today = datetime.now().strftime("%Y-%m-%d")
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -237,6 +250,10 @@ def main():
 
     # 打印到控制台
     print(brief_text)
+
+    if args.dry_run:
+        print(f"\n[DRY RUN] 不写入文件")
+        return
 
     # 保存文件
     BRIEF_DIR.mkdir(parents=True, exist_ok=True)

@@ -18,6 +18,7 @@ Project Singularity
 输出: 06_Research/video_quality_report.md
 """
 
+import argparse
 import json
 import os
 import subprocess
@@ -287,7 +288,19 @@ def check_video(video_path: str, temp_dir: str) -> dict:
 
 
 def main():
-    input_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_INPUT_DIR
+    parser = argparse.ArgumentParser(
+        description="Project Singularity — 视频质量自动检测",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "input_dir",
+        nargs="?",
+        default=str(DEFAULT_INPUT_DIR),
+        help=f"视频目录（默认: {DEFAULT_INPUT_DIR}）",
+    )
+    args = parser.parse_args()
+
+    input_dir = Path(args.input_dir)
 
     print("=" * 60)
     print("  Project Singularity — 视频质量自动检测")

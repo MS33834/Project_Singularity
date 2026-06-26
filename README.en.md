@@ -117,6 +117,16 @@ Project homepage (GitHub Pages): https://ms33834.github.io/Project_Singularity/
 
 ---
 
+## What you need before starting
+
+- **GPU**: NVIDIA GPU with at least 16 GB VRAM; RTX 4090 24 GB recommended for local Wan2.2/Flux generation.
+- **ComfyUI**: installed via `08_Automation/deploy_comfyui.sh` and reachable at `http://127.0.0.1:8188`.
+- **API keys**: Kling, ElevenLabs, and optionally Suno. Copy `.env.example` to `.env` and fill them in.
+- **Disk space**: at least 100 GB free for models, keyframes, and videos.
+- **Docker**: optional; if you prefer not to manage a local Python environment, use `docker compose up -d`.
+
+---
+
 ## Repository Layout
 
 ```
@@ -196,21 +206,25 @@ cp .env.example .env
 # 3. Deploy ComfyUI (needs NVIDIA GPU, RTX 4090 24GB recommended)
 bash 08_Automation/deploy_comfyui.sh
 
-# 4. Install Python dependencies
-pip install -r 08_Automation/requirements.txt
+# 4. Install Python dependencies (includes black, isort, pytest)
+make setup
 
 # 5. Health check
 make check
 
-# 6. Preflight
-python 08_Automation/preflight_check.py
+# 6. Preflight (--dry-run checks structure and keys without GPU)
+python 08_Automation/preflight_check.py --dry-run
 
-# 7. Batch generate keyframes
+# 7. Batch generate keyframes (use --dry-run first to preview)
+python 08_Automation/batch_keyframe_gen.py --dry-run
 python 08_Automation/batch_keyframe_gen.py
 
-# 8. Batch generate video
+# 8. Batch generate video (use --dry-run first to preview)
+python 08_Automation/storyboard_to_video.py --dry-run
 python 08_Automation/storyboard_to_video.py
 ```
+
+> Note: generation scripts call ComfyUI or cloud APIs. Use `--help` or `--dry-run` before the first run; `asset_dashboard.py` and `daily_brief.py` write reports by default, use `--dry-run` to preview.
 
 For common tasks, use `make`:
 

@@ -14,9 +14,11 @@ Project Singularity
     - 本脚本读取提示词汇总表，逐条提交到 ComfyUI API
 """
 
+import argparse
 import copy
 import json
 import os
+import sys
 import time
 from pathlib import Path
 
@@ -326,10 +328,37 @@ def download_result(prompt_id: str, output_dir: str, filename: str) -> None:
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Project Singularity — 关键帧批量生成（ComfyUI API）",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="只打印关键帧列表，不提交 ComfyUI",
+    )
+    parser.add_argument(
+        "--comfyui-url",
+        default=os.getenv("COMFYUI_URL", "http://127.0.0.1:8188"),
+        help="ComfyUI 服务地址（默认 http://127.0.0.1:8188）",
+    )
+    args = parser.parse_args()
+
+    global COMFYUI_URL
+    COMFYUI_URL = args.comfyui_url
+
     print("=" * 60)
     print("  Project Singularity — 关键帧批量生成")
     print(f"  总计 {len(KEYFRAMES)} 张关键帧")
     print("=" * 60)
+
+    if args.dry_run:
+        print("\n[DRY RUN] 以下关键帧将被生成：")
+        for kf in KEYFRAMES:
+            print(f"  {kf['id']} — {kf['scene']}")
+        print(f"\n[DRY RUN] 输出目录: {OUTPUT_DIR}")
+        print("[DRY RUN] 不执行实际提交")
+        return
 
     # 检查 ComfyUI 连接
     try:

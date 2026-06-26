@@ -2,7 +2,7 @@
 
 本目录存放项目中所有自动化脚本，涵盖环境部署、批量生成、API 调用、质量检测与项目管理。
 
-> 所有脚本均使用 `PROJECT_ROOT = Path(__file__).resolve().parent.parent` 定位项目根目录，可从任意目录运行。
+> 所有脚本均使用 `PROJECT_ROOT = Path(__file__).resolve().parent.parent` 定位项目根目录，可从任意目录运行。大部分脚本支持 `--help` / `--dry-run` 参数，建议首次运行时先用 `--help` 查看用法。
 
 ## 文件清单
 
@@ -13,8 +13,10 @@
 | `deploy_comfyui.sh` | 部署 ComfyUI 环境与必要节点 |
 | `init_git.sh` | 初始化 Git 仓库与 .gitignore |
 | `preflight_check.py` | 预飞行环境检查（GPU/内存/磁盘/模型/API 密钥） |
-| `benchmark.py` | ComfyUI 性能基准测试（Flux/Wan2.2/可灵） |
-| `requirements.txt` | Python 依赖清单 |
+| `project_health_check.py` | 项目结构完整性检查（被 CI 与测试调用） |
+| `benchmark.py` | ComfyUI 性能基准测试（Flux/Wan2.2） |
+| `requirements.txt` | 运行时 Python 依赖清单 |
+| `requirements-dev.txt` | 开发依赖（black/isort/pytest） |
 
 ### 批量生成
 
@@ -47,41 +49,51 @@
 1. 安装依赖：
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 # PyTorch 请按 CUDA 版本单独安装: https://pytorch.org
 ```
 
-2. 配置环境变量（推荐写入 .env 或直接 export）：
+2. 配置环境变量（复制 .env.example 并编辑）：
 
 ```bash
-export KLING_API_KEY="your_kling_api_key"
-export ELEVENLABS_API_KEY="your_elevenlabs_api_key"
-export SUNO_API_KEY="your_suno_api_key"
-export COMFYUI_URL="http://127.0.0.1:8188"
+cp .env.example .env
+# 编辑 .env，填入 KLING_API_KEY、ELEVENLABS_API_KEY、SUNO_API_KEY 等
 ```
 
 3. 预飞行检查：
 
 ```bash
-python preflight_check.py
+python 08_Automation/preflight_check.py         # 完整检查（需要 GPU/模型）
+python 08_Automation/preflight_check.py --dry-run  # 只检查结构与密钥
 ```
 
-4. 批量生成：
+4. 批量生成（首次运行建议先加 `--help` / `--dry-run`）：
 
 ```bash
-python batch_keyframe_gen.py        # 关键帧
-python storyboard_to_video.py       # 视频
-python kling_video_api.py            # 复杂镜头
-python elevenlabs_tts_api.py         # 配音
-python suno_music_api.py             # 配乐
+python 08_Automation/batch_keyframe_gen.py --dry-run     # 预览关键帧列表
+python 08_Automation/batch_keyframe_gen.py               # 实际生成关键帧
+
+python 08_Automation/storyboard_to_video.py --dry-run    # 预览视频镜头列表
+python 08_Automation/storyboard_to_video.py              # 实际生成视频
+
+python 08_Automation/kling_video_api.py --dry-run        # 检查参数
+python 08_Automation/kling_video_api.py                  # 生成复杂镜头
+
+python 08_Automation/elevenlabs_tts_api.py --dry-run     # 检查参数
+python 08_Automation/elevenlabs_tts_api.py               # 生成全部配音
+
+python 08_Automation/suno_music_api.py --dry-run         # 检查参数
+python 08_Automation/suno_music_api.py                   # 生成配乐
 ```
 
 5. 质量与管理：
 
 ```bash
-python video_quality_check.py        # 视频质检
-python asset_dashboard.py            # 资产看板
-python daily_brief.py                # 站会简报
+python 08_Automation/video_quality_check.py        # 视频质检
+python 08_Automation/asset_dashboard.py --dry-run  # 预览资产看板
+python 08_Automation/asset_dashboard.py            # 写入 06_Research/asset_dashboard.md
+python 08_Automation/daily_brief.py --dry-run      # 预览站会简报
+python 08_Automation/daily_brief.py                # 写入 07_Team/daily_briefs/YYYY-MM-DD.md
 ```
 
 ## 输出规范

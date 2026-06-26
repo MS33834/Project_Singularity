@@ -15,10 +15,12 @@ Project Singularity
     - 记录生成日志到 06_Research/video_gen_log.csv
 """
 
+import argparse
 import copy
 import csv
 import json
 import os
+import sys
 import time
 from datetime import datetime
 from pathlib import Path
@@ -395,12 +397,41 @@ def log_generation(
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Project Singularity — 分镜到视频流水线（Wan2.2 I2V/T2V）",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="只打印镜头列表，不提交 ComfyUI",
+    )
+    parser.add_argument(
+        "--comfyui-url",
+        default=os.getenv("COMFYUI_URL", "http://127.0.0.1:8188"),
+        help="ComfyUI 服务地址（默认 http://127.0.0.1:8188）",
+    )
+    args = parser.parse_args()
+
+    global COMFYUI_URL
+    COMFYUI_URL = args.comfyui_url
+
     print("=" * 60)
     print("  Project Singularity — 分镜到视频流水线")
     print(f"  Wan2.2 I2V 镜头: {len(WAN_SHOTS)}")
     print(f"  Wan2.2 T2V 镜头: {len(T2V_SHOTS)}")
     print(f"  可灵镜头（需单独运行 kling_video_api.py）: {len(KLING_SHOTS)}")
     print("=" * 60)
+
+    if args.dry_run:
+        print("\n[DRY RUN] 以下镜头将被生成：")
+        for shot in WAN_SHOTS:
+            print(f"  [I2V] {shot['id']} — {shot['keyframe']} — {shot['prompt'][:50]}...")
+        for shot in T2V_SHOTS:
+            print(f"  [T2V] {shot['id']} — {shot['prompt'][:50]}...")
+        print(f"\n[DRY RUN] 输出目录: {OUTPUT_DIR}")
+        print("[DRY RUN] 不执行实际提交")
+        return
 
     # 检查连接
     try:

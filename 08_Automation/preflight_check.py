@@ -8,6 +8,7 @@ Project Singularity
 退出码: 0=全部通过, 1=有警告, 2=有致命错误
 """
 
+import argparse
 import os
 import shutil
 import subprocess
@@ -291,6 +292,17 @@ def check_project_structure(result: CheckResult):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description="Project Singularity — 预飞行环境检查",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="只执行非环境依赖的检查（项目结构、API 密钥格式），跳过 GPU/模型检查",
+    )
+    args = parser.parse_args()
+
     print("=" * 60)
     print("  Project Singularity — 预飞行环境检查")
     print(f"  时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -299,6 +311,16 @@ def main():
     print("=" * 60)
 
     result = CheckResult()
+
+    if args.dry_run:
+        print("\n[DRY RUN] 只检查项目结构与 API 密钥配置")
+        check_api_keys(result)
+        check_project_structure(result)
+        print("\n  [DRY RUN] 跳过 GPU/内存/磁盘/软件/模型检查")
+        print(
+            f"\n  通过: {len(result.passed)} | 警告: {len(result.warnings)} | 错误: {len(result.errors)}"
+        )
+        sys.exit(result.exit_code())
 
     check_gpu(result)
     check_ram(result)
@@ -338,10 +360,10 @@ def main():
     # 生成报告文件
     report_path = PROJECT_ROOT / "06_Research" / "preflight_report.md"
     with open(report_path, "w", encoding="utf-8") as f:
-        f.write(f"# 预飞行检查报告\n\n")
+        f.write("# 预飞行检查报告\n\n")
         f.write(f"**时间**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n\n")
         f.write(f"**结果**: {'通过' if not result.errors else '失败'}\n\n")
-        f.write(f"| 类别 | 数量 |\n|------|------|\n")
+        f.write("| 类别 | 数量 |\n|------|------|\n")
         f.write(f"| 通过 | {len(result.passed)} |\n")
         f.write(f"| 警告 | {len(result.warnings)} |\n")
         f.write(f"| 错误 | {len(result.errors)} |\n\n")

@@ -10,10 +10,12 @@ Project Singularity — 用于生成艾娃与奇点核心配音
 3. 如需克隆声音，请使用 Voice Design / Voice Cloning 功能。
 """
 
+import argparse
 import os
+import sys
 from pathlib import Path
 
-from elevenlabs import ElevenLabs, VoiceSettings
+import requests
 
 # ==================== 配置区 ====================
 
@@ -25,26 +27,10 @@ API_KEY = os.getenv("ELEVENLABS_API_KEY", "your_api_key_here")
 OUTPUT_DIR = PROJECT_ROOT / "01_Assets" / "Audio" / "Dialogue"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-# 角色语音配置
-VOICE_CONFIG = {
-    "艾娃": {
-        "voice_id": "XB0fDUnXU5powFXDhCwa",  # 示例：Bella，请替换为实际 voice_id
-        "settings": VoiceSettings(
-            stability=0.45,
-            similarity_boost=0.65,
-            style=0.35,
-            use_speaker_boost=True,
-        ),
-    },
-    "核心": {
-        "voice_id": "XrExE9yKIg1WjnnlVkGX",  # 示例：Adam，请替换
-        "settings": VoiceSettings(
-            stability=0.75,
-            similarity_boost=0.30,
-            style=0.10,
-            use_speaker_boost=False,
-        ),
-    },
+# 角色 voice_id 映射（示例，请替换为实际值）
+VOICE_IDS = {
+    "艾娃": "XB0fDUnXU5powFXDhCwa",  # 示例：Bella
+    "核心": "XrExE9yKIg1WjnnlVkGX",  # 示例：Adam
 }
 
 # 对白列表（来自剧本）
@@ -75,44 +61,86 @@ LINES = [
 # ==================== 工具函数 ====================
 
 
-def generate_speech(client: ElevenLabs, role: str, text: str, output_path: str) -> None:
-    """调用 ElevenLabs API 生成单条语音。"""
-    config = VOICE_CONFIG[role]
+def validate_api_key() -> bool:
+    """校验 API 密钥是否已配置。"""
+    if API_KEY in ("", "your_api_key_here"):
+        print("[ERROR] ELEVENLABS_API_KEY 未配置，请在 .env 中设置或 export ELEVENLABS_API_KEY")
+        return False
+    return True
 
-    audio_iterator = client.text_to_speech.convert(
-        text=text,
-        voice_id=config["voice_id"],
-        model_id="eleven_multilingual_v2",
-        output_format="mp3_44100_128",
-        voice_settings=config["settings"],
-    )
 
-    # 将生成器转为 bytes
-    audio_bytes = b"".join(audio_iterator)
-
+def generate_speech_rest(role: str, text: str, output_path: str) -> None:
+    """使用 ElevenLabs REST API 生成单条语音（无需 elevenlabs SDK）。"""
+    voice_id = VOICE_IDS.get(role, VOICE_IDS["艾娃"])
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+    headers = {
+        "Accept": "audio/mpeg",
+        "Content-Type": "application/json",
+        "xi-api-key": API_KEY,
+    }
+    payload = {
+        "text": text,
+        "model_id": "eleven_multilingual_v2",
+        "output_format": "mp3_44100_128",
+        "voice_settings": {
+            "stability": 0.45 if role == "艾娃" else 0.75,
+            "similarity_boost": 0.65 if role == "艾娃" else 0.30,
+            "style": 0.35 if role == "艾娃" else 0.10,
+            "use_speaker_boost": role == "艾娃",
+        },
+    }
+    response = requests.post(url, headers=headers, json=payload, timeout=120)
+    response.raise_for_status()
     with open(output_path, "wb") as f:
-        f.write(audio_bytes)
-
+        f.write(response.content)
     print(f"[Generated] {output_path}")
 
 
 def main():
-    client = ElevenLabs(api_key=API_KEY)
+    parser = argparse.ArgumentParser(
+        description="Project Singularity — ElevenLabs 文本转语音",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--role",
+        default=os.getenv("TTS_ROLE", "艾娃"),
+        help="角色：艾娃 | 核心（默认 艾娃）",
+    )
+    parser.add_argument(
+        "--text",
+        default=os.getenv("TTS_TEXT", ""),
+        help="单条文本（为空则生成剧本全部对白）",
+    )
+    parser.add_argument(
+        "--output",
+        default=os.getenv("TTS_FILENAME", ""),
+        help="输出文件名（仅单条模式有效）",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="只打印参数，不调用 API",
+    )
+    args = parser.parse_args()
 
-    # 支持通过环境变量 TTS_TEXT / TTS_ROLE / TTS_FILENAME 生成单条语音（供 render_queue.py 调用）
-    single_text = os.getenv("TTS_TEXT")
-    single_role = os.getenv("TTS_ROLE", "艾娃")
-    single_filename = os.getenv("TTS_FILENAME")
+    if args.dry_run:
+        print(f"[DRY RUN] role={args.role}, text={args.text or '(全部剧本)'}")
+        return
 
-    if single_text:
-        output_path = OUTPUT_DIR / (single_filename or f"{single_role}_single.wav")
-        generate_speech(client, single_role, single_text, str(output_path))
+    if not validate_api_key():
+        sys.exit(1)
+
+    if args.text:
+        output_path = OUTPUT_DIR / (args.output or f"{args.role}_single.mp3")
+        generate_speech_rest(args.role, args.text, str(output_path))
         print(f"[Info] 单条配音生成完成: {output_path}")
         return
 
     for line in LINES:
         output_path = OUTPUT_DIR / line["filename"]
-        generate_speech(client, line["role"], line["text"], str(output_path))
+        # 保持 wav 扩展名以兼容现有预期；REST API 返回 mp3，这里统一保存为 mp3
+        output_path = output_path.with_suffix(".mp3")
+        generate_speech_rest(line["role"], line["text"], str(output_path))
 
     print("[Info] 全部配音生成完成")
 

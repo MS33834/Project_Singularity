@@ -330,16 +330,20 @@ def show_status():
 # ==================== 主流程 ====================
 
 
+def print_usage():
+    print("用法:")
+    print("  python render_queue.py add <shot_id> <type> <prompt> [--priority N]")
+    print("  python render_queue.py list")
+    print("  python render_queue.py run")
+    print("  python render_queue.py status")
+    print("  python render_queue.py retry")
+    print("")
+    print("任务类型: keyframe | video_i2v | video_t2v | kling | tts | music")
+
+
 def main():
-    if len(sys.argv) < 2:
-        print("用法:")
-        print("  python render_queue.py add <shot_id> <type> <prompt> [--priority N]")
-        print("  python render_queue.py list")
-        print("  python render_queue.py run")
-        print("  python render_queue.py status")
-        print("  python render_queue.py retry")
-        print("")
-        print("任务类型: keyframe | video_i2v | video_t2v | kling | tts | music")
+    if len(sys.argv) < 2 or sys.argv[1] in ("-h", "--help"):
+        print_usage()
         return
 
     cmd = sys.argv[1]

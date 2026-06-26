@@ -50,6 +50,13 @@ build/
 06_Research/_temp_frames/
 *.tmp
 
+# --- 自动生成的报告（运行脚本后产生，无需提交）---
+06_Research/asset_dashboard.md
+06_Research/preflight_report.md
+06_Research/video_quality_report.md
+06_Research/benchmark_results.md
+07_Team/daily_briefs/*.md
+
 # --- 系统文件 ---
 .DS_Store
 Thumbs.db
