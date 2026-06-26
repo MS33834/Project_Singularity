@@ -130,11 +130,12 @@ Project_Singularity/
 ├── 07_Team/                # 团队分工与任务分派
 ├── 08_Automation/          # 部署、生成、质检、同步脚本
 ├── 09_Release/             # 发布检查清单与展示模板
-├── examples/               # 示例输入/输出，含《奇点回响》完整案例
+├── examples/               # 示例与《奇点回响》完整案例
 ├── docs/                   # GitHub Pages 介绍页
+├── tests/                  # 健康检查测试
 ├── .github/                # Issue 与 PR 模板
-├── AIGC_Experience_Chain.md
-├── AIGC_Experience_Chain.en.md
+├── AIGC_Experience_Chain.md      (中文)
+├── AIGC_Experience_Chain.en.md  (English)
 ├── CHANGELOG.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
@@ -142,10 +143,12 @@ Project_Singularity/
 ├── Dockerfile
 ├── LICENSE
 ├── Makefile
-├── README.en.md
+├── README.md                     (中文)
+├── README.en.md                  (English)
 ├── ROADMAP.md
 ├── TROUBLESHOOTING.md
 ├── docker-compose.yml
+├── pyproject.toml
 ├── 项目计划书_完整版.md
 ├── 项目进度检查清单.md
 └── tasks.md

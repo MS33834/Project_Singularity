@@ -86,7 +86,7 @@ class CheckResult:
 
 def check_gpu(result: CheckResult):
     """检查 GPU。"""
-    print("\n[1/8] 检查 GPU...")
+    print("\n[1/9] 检查 GPU...")
     try:
         import torch
 
@@ -107,7 +107,7 @@ def check_gpu(result: CheckResult):
 
 def check_ram(result: CheckResult):
     """检查内存（跨平台）。"""
-    print("\n[2/8] 检查内存...")
+    print("\n[2/9] 检查内存...")
     import platform
 
     system = platform.system()
@@ -157,7 +157,7 @@ def check_ram(result: CheckResult):
 
 def check_disk(result: CheckResult):
     """检查磁盘空间。"""
-    print("\n[3/8] 检查磁盘空间...")
+    print("\n[3/9] 检查磁盘空间...")
     try:
         usage = shutil.disk_usage(PROJECT_ROOT)
         free_gb = usage.free / 1024**3
@@ -171,7 +171,7 @@ def check_disk(result: CheckResult):
 
 def check_software(result: CheckResult):
     """检查必需软件。"""
-    print("\n[4/8] 检查软件...")
+    print("\n[4/9] 检查软件...")
     for cmd, name in REQUIRED_SOFTWARE:
         path = shutil.which(cmd)
         if path:
@@ -189,7 +189,7 @@ def check_software(result: CheckResult):
 
 def check_packages(result: CheckResult):
     """检查 Python 包。"""
-    print("\n[5/8] 检查 Python 包...")
+    print("\n[5/9] 检查 Python 包...")
     for pkg_name, import_name in REQUIRED_PACKAGES:
         try:
             __import__(import_name)
@@ -200,7 +200,7 @@ def check_packages(result: CheckResult):
 
 def check_comfyui(result: CheckResult):
     """检查 ComfyUI 安装。"""
-    print("\n[6/8] 检查 ComfyUI...")
+    print("\n[6/9] 检查 ComfyUI...")
     if not COMFYUI_DIR.exists():
         result.error(f"ComfyUI 目录不存在: {COMFYUI_DIR}")
         return
@@ -234,7 +234,7 @@ def check_comfyui(result: CheckResult):
 
 def check_models(result: CheckResult):
     """检查模型文件。"""
-    print("\n[7/8] 检查模型文件...")
+    print("\n[7/9] 检查模型文件...")
     if not COMFYUI_DIR.exists():
         result.warning("ComfyUI 目录不存在，跳过模型检查")
         return
@@ -250,7 +250,7 @@ def check_models(result: CheckResult):
 
 def check_api_keys(result: CheckResult):
     """检查 API 密钥。"""
-    print("\n[8/8] 检查 API 密钥...")
+    print("\n[8/9] 检查 API 密钥...")
     for key_name, description in REQUIRED_API_KEYS.items():
         value = os.getenv(key_name, "")
         if value and value != "your_api_key_here":
@@ -260,12 +260,12 @@ def check_api_keys(result: CheckResult):
             if optional:
                 result.warning(f"{key_name}: 未配置 ({description})")
             else:
-                result.warning(f"{key_name}: 未配置 ({description})")
+                result.error(f"{key_name}: 未配置 ({description})")
 
 
 def check_project_structure(result: CheckResult):
     """检查项目目录结构。"""
-    print("\n[额外] 检查项目目录结构...")
+    print("\n[9/9] 检查项目目录结构...")
     required_dirs = [
         "01_Assets/Characters",
         "01_Assets/Scenes",

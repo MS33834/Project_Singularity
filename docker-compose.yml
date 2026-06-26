@@ -6,7 +6,8 @@ services:
     container_name: project-singularity
     volumes:
       - .:/app
-      - ./.env:/app/.env:ro
+    # 如需加载 .env，先执行 cp .env.example .env，再取消下行注释
+    # - ./.env:/app/.env:ro
     environment:
       - PYTHONUNBUFFERED=1
     # 如需 GPU，取消下面注释并确保宿主机已安装 NVIDIA Docker Runtime

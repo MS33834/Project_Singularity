@@ -19,30 +19,31 @@ glowing orange bracelet on left wrist, weathered data terminal at waist
 ├── Side/               # 侧面参考图
 ├── Back/               # 背面参考图
 ├── Expressions/        # 表情参考图
-├── Outfits/            # 服装/姿态变体
 ├── Turnaround/         # 三视图合成
 └── README.md           # 本文件
 ```
 
-## 已生成资产
+## 资产生成状态
 
-| 文件 | 描述 | 生成时间 |
-|------|------|----------|
-| `Front/Ava_front_v01.png` | 正面肖像 | 2026-06-24 |
-| `Side/Ava_side_v01.png` | 右侧面 | 2026-06-24 |
-| `Back/Ava_back_v01.png` | 背面（展示颈后接口） | 2026-06-24 |
-| `Expressions/Ava_neutral_v01.png` | 中性表情 | 2026-06-24 |
-| `Expressions/Ava_alert_v01.png` | 警觉表情 | 2026-06-24 |
-| `Expressions/Ava_sad_smile_v01.png` | 悲伤微笑 | 2026-06-24 |
-| `Turnaround/Ava_turnaround_v01.png` | 三视图合成 | 2026-06-24 |
+> 以下子目录与 PNG 文件尚未生成。脚本与工作流已就绪，在 GPU 环境运行 `08_Automation/batch_keyframe_gen.py` 后产出。
+
+| 计划文件 | 描述 | 状态 |
+|------|------|------|
+| `Front/Ava_front_v01.png` | 正面肖像 | ⏳ 待生成 |
+| `Side/Ava_side_v01.png` | 右侧面 | ⏳ 待生成 |
+| `Back/Ava_back_v01.png` | 背面（展示颈后接口） | ⏳ 待生成 |
+| `Expressions/Ava_neutral_v01.png` | 中性表情 | ⏳ 待生成 |
+| `Expressions/Ava_alert_v01.png` | 警觉表情 | ⏳ 待生成 |
+| `Expressions/Ava_sad_smile_v01.png` | 悲伤微笑 | ⏳ 待生成 |
+| `Turnaround/Ava_turnaround_v01.png` | 三视图合成 | ⏳ 待生成 |
 
 ## 一致性标准
 
-- 盲测方案就绪，待实机验证
-- 跨镜头相似度: >95% (主观认定)
+- 盲测方案已就绪（见 `06_Research/QA测试与盲测方案.md`），待实机验证
+- 目标跨镜头相似度: >95%
 - 不可变特征: 短发、琥珀色眼睛、右眼下疤痕、颈后神经接口、右肩补丁、橙色手镯
 
 ## 使用说明
 
-在 ComfyUI IPAdapter 节点中，优先使用 `Turnaround/Ava_turnaround_v01.png` 作为全局参考。
+生成资产后，在 ComfyUI IPAdapter 节点中优先使用 `Turnaround/Ava_turnaround_v01.png` 作为全局参考。
 在特写镜头中，使用 `Expressions/` 下对应表情作为辅助参考。

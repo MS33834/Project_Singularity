@@ -42,6 +42,7 @@ __pycache__/
 dist/
 build/
 .eggs/
+.pytest_cache/
 
 # --- ComfyUI 输出缓存（仅根目录级别） ---
 /output/

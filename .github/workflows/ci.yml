@@ -20,17 +20,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r 08_Automation/requirements.txt
+          pip install -r 08_Automation/requirements-dev.txt
 
       - name: Project health check
         run: python 08_Automation/project_health_check.py
 
+      - name: Run tests
+        run: pytest
+
       - name: Lint with black (check only)
-        run: |
-          pip install black
-          black --check 08_Automation
+        run: black --check 08_Automation tests
 
       - name: Lint with isort (check only)
-        run: |
-          pip install isort
-          isort --check-only 08_Automation
+        run: isort --check-only 08_Automation tests

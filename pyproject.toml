@@ -29,9 +29,6 @@ Homepage = "https://github.com/MS33834/Project_Singularity"
 Repository = "https://github.com/MS33834/Project_Singularity"
 Issues = "https://github.com/MS33834/Project_Singularity/issues"
 
-[tool.setuptools.packages.find]
-where = ["08_Automation"]
-
 [tool.black]
 line-length = 100
 target-version = ['py311']

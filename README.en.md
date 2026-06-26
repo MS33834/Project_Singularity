@@ -130,8 +130,9 @@ Project_Singularity/
 ├── 07_Team/                # Team roles and task assignments
 ├── 08_Automation/          # Deployment, generation, QA, sync scripts
 ├── 09_Release/             # Release checklists and showcase templates
-├── examples/               # Example inputs/outputs, including the Echo of the Singularity case study
+├── examples/               # Examples and the Echo of the Singularity case study
 ├── docs/                   # GitHub Pages introduction site
+├── tests/                  # Health check tests
 ├── .github/                # Issue & PR templates, CI workflows
 ├── AIGC_Experience_Chain.md      (Chinese)
 ├── AIGC_Experience_Chain.en.md   (English)
@@ -147,7 +148,10 @@ Project_Singularity/
 ├── ROADMAP.md
 ├── TROUBLESHOOTING.md
 ├── docker-compose.yml
-└── 项目计划书_完整版.md
+├── pyproject.toml
+├── 项目计划书_完整版.md
+├── 项目进度检查清单.md
+└── tasks.md
 ```
 
 ---
